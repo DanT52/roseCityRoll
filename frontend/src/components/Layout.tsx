@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { Instagram, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import roseCityIcon from '../assets/images/roseCityIcon.png';
 
 const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,12 +10,13 @@ const Layout: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <div className="min-h-screen bg-background-950 font-body">
+    <div className="min-h-screen bg-background-950 font-body flex flex-col">
       <header className="bg-background-800 shadow-md">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <Link to="/" className="font-heading text-2xl text-text-100">
+            <Link to="/" className="font-heading text-2xl text-text-100 flex items-center">
               Big Rose City Roll
+              <img src={roseCityIcon} alt="Rose City Icon" className="ml-2 w-12 h-12" />
             </Link>
             
             <div className="hidden md:flex items-center space-x-6">
@@ -60,7 +62,7 @@ const Layout: React.FC = () => {
         </nav>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <Outlet />
       </main>
 
