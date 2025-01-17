@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import RoseCityRollBanner from '../assets/images/RoseCityRoll.png';
 
 const Home: React.FC = () => {
   // Mock announcements - in production, these would come from an API
@@ -15,17 +16,17 @@ const Home: React.FC = () => {
   return (
     <div className="space-y-12">
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center">
+      <section className="relative flex items-center justify-center">
         
         <div className="relative z-10 text-center text-900">
-          <h1 className="font-heading text-5xl mb-6">Big Rose City Roll</h1>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <img src={RoseCityRollBanner} alt="Big Rose City Roll Banner" className="w-full max-w-xl mx-auto  mb-4" />
+          <p className="text-xl mb-4 max-w-2xl mx-auto">
             Join Portland's premier rollerblading event for a week of urban skating adventures,
             community building, and unforgettable experiences.
           </p>
           <a
             href="#register"
-            className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white font-bold mb-10 py-3 px-6 rounded-lg transition-colors"
           >
             Register Now <ArrowRight className="ml-2" />
           </a>
@@ -34,7 +35,7 @@ const Home: React.FC = () => {
 
       {/* Announcements Section */}
       {announcements.length > 0 && (
-        <section className="bg-accent-100 rounded-lg p-6">
+        <section className="bg-accent-100 rounded-lg p-8 mt-4">
           <h2 className="font-heading text-2xl mb-4 text-white">Announcements</h2>
           <div className="space-y-4">
             {announcements.map((announcement) => (
