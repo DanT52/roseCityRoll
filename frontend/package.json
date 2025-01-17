@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b gh-pages-roll -d dist"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.0.0",
