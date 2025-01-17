@@ -1,16 +1,11 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Instagram } from 'lucide-react';
 import RoseCityRollBanner from '../assets/images/RoseCityRoll.png';
 
 const Home: React.FC = () => {
   // Mock announcements - in production, these would come from an API
   const announcements = [
-    {
-      id: '1',
-      title: 'Registration Now Open!',
-      content: 'Sign up for Big Rose City Roll 2024 is now available.',
-      date: '2024-03-15',
-    },
+    
   ];
 
   return (
@@ -21,15 +16,18 @@ const Home: React.FC = () => {
         <div className="relative z-10 text-center text-900">
           <img src={RoseCityRollBanner} alt="Big Rose City Roll Banner" className="w-full max-w-xl mx-auto  mb-4" />
           <p className="text-xl mb-4 max-w-2xl mx-auto">
-            Join Portland's premier rollerblading event for a week of urban skating adventures,
+            Join Portland's first Big Rose City Roll from June 26th to June 29th 2025 for a week of skating,
             community building, and unforgettable experiences.
           </p>
           <a
-            href="#register"
+            href="https://www.instagram.com/bigrosecityroll/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white font-bold mb-10 py-3 px-6 rounded-lg transition-colors"
           >
-            Register Now <ArrowRight className="ml-2" />
+            <Instagram className="w-6 h-6 mr-2" /> Follow for Updates <ArrowRight className="ml-2" />
           </a>
+          <p className="text-xl text-text-200">Registration will be open soon!</p>
         </div>
       </section>
 
@@ -53,11 +51,9 @@ const Home: React.FC = () => {
       <section className="max-w-4xl mx-auto">
         <h2 className="font-heading text-3xl mb-6 text-text-100">About the Event</h2>
         <div className="prose text-text-200">
-          <p className="mb-4">
-            Big Rose City Roll is Portland's answer to the famous Big Apple Roll, bringing together
-            inline skaters of all skill levels for a week of urban adventures, social skating, and
-            community building.
-          </p>
+            <p className="mb-4">
+            Big Rose City Roll is an exciting event that brings together inline and quad skaters!
+            </p>
           <p className="mb-4">
             Each day features carefully planned routes that showcase the best of Portland's
             skateable terrain, from smooth waterfront paths to urban adventures through the city's
@@ -66,6 +62,9 @@ const Home: React.FC = () => {
           <p>
             Whether you're a seasoned skater or just getting started, our inclusive community
             welcomes you to join us for this unforgettable skating experience.
+          </p>
+          <p className="mt-4">
+            More info is comming soon!
           </p>
         </div>
       </section>
