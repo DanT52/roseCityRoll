@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Instagram } from 'lucide-react';
+import { ArrowRight, Instagram, Link as LinkIcon } from 'lucide-react';
 import RoseCityRollBanner from '../assets/images/RoseCityRoll.png';
 
 const Home: React.FC = () => {
@@ -64,7 +64,11 @@ const Home: React.FC = () => {
             welcomes you to join us for this unforgettable skating experience.
           </p>
           <p className="mt-4">
-            More info is comming soon!
+            More info is coming soon!
+          </p>
+          <p className="mt-4">
+            This event is hosted by <a href="https://www.instagram.com/bridge.city.skate/" target="_blank" rel="noopener noreferrer" className="text-primary-500 hover:underline inline-flex items-center"><Instagram className="w-4 h-4 mr-1" /> Bridge City Skate</a>. 
+            Follow them on Instagram and check out their <a href="https://linktr.ee/bridgecityskate" target="_blank" rel="noopener noreferrer" className="text-primary-500 hover:underline inline-flex items-center"><LinkIcon className="w-4 h-4 mr-1" /> Linktree</a> for more information.
           </p>
         </div>
       </section>
