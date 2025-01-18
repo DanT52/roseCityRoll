@@ -68,8 +68,9 @@ const Layout: React.FC = () => {
 
       <footer className="bg-background-800 text-text-200 py-8">
         <div className="container mx-auto px-4">
-          <div className="text-center">
+            <div className="text-center flex justify-center space-x-1">
             <p>&copy; {new Date().getFullYear()} Big Rose City Roll. All rights reserved.</p>
+            <Link to="/login" className="text-text-400 hover:text-primary-500 text-sm mt-2 inline-block">Admin</Link>
           </div>
         </div>
       </footer>
