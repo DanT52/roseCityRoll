@@ -5,6 +5,10 @@ import Home from './pages/Home';
 import Schedule from './pages/Schedule';
 import FAQ from './pages/FAQ';
 import Thanks from './pages/Thanks';
+import Login from './pages/Login';
+import AdminDash from './pages/AdminDash';
+
+
 
 function App() {
   return (
@@ -15,6 +19,10 @@ function App() {
           <Route path="schedule" element={<Schedule />} />
           <Route path="faq" element={<FAQ />} />
           <Route path="thanks" element={<Thanks />} />
+          <Route path="login" element={<Login />} />
+          <Route path="admindash" element={<AdminDash />} />
+          
+          
         </Route>
       </Routes>
     </BrowserRouter>
