@@ -1,18 +1,37 @@
 import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { AlertCircle } from 'lucide-react';
 
 const Login: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-    console.log('Login attempted:', credentials);
+    try {
+      setError(null);
+      await login(credentials.username, credentials.password);
+      navigate('/admindash');
+    } catch (error) {
+      console.error('Error during login:', error);
+      setError('Invalid username or password');
+    }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10">
       <h1 className="font-heading text-3xl text-text-100 mb-8 text-center">Admin Login</h1>
       <div className="bg-background-800 p-8 rounded-lg shadow-lg">
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg flex items-center text-red-500">
+            <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+            <p>{error}</p>
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="username" className="block text-text-200 mb-2">Username</label>
