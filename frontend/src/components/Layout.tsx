@@ -1,13 +1,21 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Instagram, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import roseCityIcon from '../assets/images/roseCityIcon.png';
+import { useAuth } from '../contexts/AuthContext';
 
 const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen bg-background-950 font-body flex flex-col">
@@ -32,6 +40,14 @@ const Layout: React.FC = () => {
               >
                 <Instagram className="w-6 h-6" />
               </a>
+              {isLoggedIn && (
+                <>
+                  <Link to="/admindash" className="text-text-200 hover:text-primary-500">AdminDash</Link>
+                  <button onClick={handleLogout} className="text-text-200 hover:text-primary-500">
+                    Logout
+                  </button>
+                </>
+              )}
             </div>
 
             <button 
@@ -57,6 +73,14 @@ const Layout: React.FC = () => {
               >
                 <Instagram className="w-6 h-6 mr-2" /> Instagram
               </a>
+              {isLoggedIn && (
+                <>
+                  <Link to="/admindash" className="block text-text-200 hover:text-primary-500">AdminDash</Link>
+                  <button onClick={handleLogout} className="block text-text-200 hover:text-primary-500">
+                    Logout
+                  </button>
+                </>
+              )}
             </div>
           )}
         </nav>
