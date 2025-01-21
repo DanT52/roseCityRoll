@@ -7,20 +7,19 @@ export interface Announcement {
 
 export interface DaySchedule {
   id: string;
-  day: string;
-  date: string;
-  meetingPoint: string;
-  startTime: string;
-  endTime: string;
-  routeDescription: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  distance: string;
-  leader: string;
+  name: string;
+  date?: string;
+  difficulty?: 'Bunny' | 'Green' | 'Blue' | 'Black';
+  startTime?: string;
+  endTime?: string;
+  distance?: number;
+  end?: string;
+  description?: string;
+  embeddedRouteUrl?: string;
 }
 
 export interface FAQ {
   id: string;
   question: string;
   answer: string;
-  category: string;
 }
