@@ -1,8 +1,8 @@
 {
   "name": "big-rose-city-roll",
   "private": true,
-  "version": "0.0.0",
-  "homepage": "https://dant52.github.io/roseCityRoll/",
+  "version": "1.0.0",
+  "homepage": "http://bigrosecityroll.com/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,7 +18,7 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.22.3"
+    "react-router-dom": "^6.28.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
