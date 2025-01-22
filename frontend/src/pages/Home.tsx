@@ -66,10 +66,17 @@ const Home: React.FC = () => {
           <p className="mt-4">
             More info is coming soon!
           </p>
-          <p className="mt-4">
-            This event is hosted by <a href="https://www.instagram.com/bridge.city.skate/" target="_blank" rel="noopener noreferrer" className="text-primary-500 hover:underline inline-flex items-center"><Instagram className="w-4 h-4 mr-1" /> Bridge City Skate</a>. 
-            Follow them on Instagram and check out their <a href="https://linktr.ee/bridgecityskate" target="_blank" rel="noopener noreferrer" className="text-primary-500 hover:underline inline-flex items-center"><LinkIcon className="w-4 h-4 mr-1" /> Linktree</a> for more information.
-          </p>
+          <div className="mt-8 text-center">
+            <p className="text-text-200 mb-4">Hosted by</p>
+            <div className="flex justify-center gap-4">
+              <a href="https://www.instagram.com/bridge.city.skate/" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.imgur.com/Fa2qHe3.png" alt="Bridge City Skate" className="h-12" />
+              </a>
+              <a href="https://www.instagram.com/lallaveallen_/" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.imgur.com/JOvfQIj.png" alt="La Llave Allen" className="h-12" />
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     </div>
