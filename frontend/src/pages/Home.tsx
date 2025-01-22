@@ -19,15 +19,24 @@ const Home: React.FC = () => {
             Join Portland's first Big Rose City Roll from June 26th to June 29th 2025 for a week of skating,
             community building, and unforgettable experiences.
           </p>
-          <a
-            href="https://www.instagram.com/bigrosecityroll/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white font-bold mb-10 py-3 px-6 rounded-lg transition-colors"
-          >
-            <Instagram className="w-6 h-6 mr-2" /> Follow for Updates <ArrowRight className="ml-2" />
-          </a>
-          <p className="text-xl text-text-200">Registration will be open soon!</p>
+          <div className="flex flex-col items-center justify-center gap-4 mb-10">
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfRImAGRhCiu-2dNP7SCB1dt8_x5-4zDMHYqWQMHYBwFkYzIg/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 px-8 rounded-lg transition-colors text-lg w-fit"
+            >
+              Register Now <ArrowRight className="ml-2 w-6 h-6" />
+            </a>
+            <a
+              href="https://www.instagram.com/bigrosecityroll/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center bg-accent-500 hover:bg-accent-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-base"
+            >
+              <Instagram className="w-5 h-5 mr-2" /> Follow for Updates
+            </a>
+          </div>
         </div>
       </section>
 
@@ -69,12 +78,13 @@ const Home: React.FC = () => {
           <div className="mt-8 text-center">
             <p className="text-text-200 mb-4">Hosted by</p>
             <div className="flex justify-center gap-4">
-              <a href="https://www.instagram.com/bridge.city.skate/" target="_blank" rel="noopener noreferrer">
-                <img src="https://i.imgur.com/Fa2qHe3.png" alt="Bridge City Skate" className="h-12" />
-              </a>
               <a href="https://www.instagram.com/lallaveallen_/" target="_blank" rel="noopener noreferrer">
                 <img src="https://i.imgur.com/JOvfQIj.png" alt="La Llave Allen" className="h-12" />
               </a>
+              <a href="https://www.instagram.com/bridge.city.skate/" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.imgur.com/Fa2qHe3.png" alt="Bridge City Skate" className="h-12" />
+              </a>
+              
             </div>
           </div>
         </div>
