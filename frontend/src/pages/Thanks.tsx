@@ -7,8 +7,8 @@ const Thanks: React.FC = () => {
       
       <div className="prose text-text-200">
         <p className="mb-6">
-          Big Rose City Roll wouldn't be possible without the dedication and support of our amazing
-          community. We'd like to extend our heartfelt thanks to:
+          Big Rose City Roll wouldn&apos;t be possible without the dedication and support of our amazing
+          community. We&apos;d like to extend our heartfelt thanks to:
         </p>
 
         <section className="mb-8">
