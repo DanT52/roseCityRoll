@@ -1,32 +1,42 @@
+# ================================
 # Stage 1: Build the React app
-FROM node:18 AS build
+# ================================
+FROM node:18 as frontend-build
 
-# Set the working directory
 WORKDIR /app
-
-# Copy package.json and package-lock.json from /frontend
 COPY frontend/package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application code from /frontend
 COPY frontend ./
-
-# Set environment variable
 ENV VITE_REACT_APP_BACKEND_URL=http://localhost:8000
-
-# Build the frontend
 RUN npm run build
 
-# Stage 2: Serve the React app with Nginx
-FROM nginx:alpine
+# ================================
+# Stage 2: Final image with Nginx, Python, and FastAPI
+# ================================
+FROM python:3.11-slim
 
-# Copy the build output to the Nginx HTML directory
-COPY --from=build /app/dist /usr/share/nginx/html
+# Install Nginx and any needed system packages
+RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
 
-# Expose port 80
+# Copy backend code & install Python deps
+WORKDIR /app
+COPY backend/ /app/backend/
+COPY backend/requirements.txt /app/backend/requirements.txt
+RUN pip install --no-cache-dir -r /app/backend/requirements.txt
+
+# Copy frontend build output to Nginx
+COPY --from=frontend-build /app/dist /usr/share/nginx/html
+
+# Copy a simple startup script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Environment variables for your FastAPI app
+ENV SECRET=some_secret_key
+ENV DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/mydb
+
+# Expose both 80 (Nginx) and 8000 (FastAPI)
 EXPOSE 80
+EXPOSE 8000
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/app/start.sh"]

@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  my_app:
+    build: .
+    container_name: my_app_container
+    ports:
+      - "80:80"         # Nginx
+      - "8000:8000"     # FastAPI
+    environment:
+      SECRET: "my_secret_value"
+      DATABASE_URL: "postgresql+asyncpg://postgres:password@db:5432/mydb"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
