@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import RoseCityRollBanner from '../assets/images/RoseCityRoll.png';
+import RoseCityRollBanner from '../assets/images/roseCityRoll.png';
 
 const Home: React.FC = () => {
   // Mock announcements - in production, these would come from an API
