@@ -1,16 +1,20 @@
+"""
+Main application module.
+"""
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db import User, create_db_and_tables
-from app.schemas import UserCreate, UserRead, UserUpdate
 from app.users import auth_backend, cookie_auth_backend, current_active_user, fastapi_users
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Not needed if you setup a migration system like Alembic
+async def lifespan(_app: FastAPI):
+    """
+    Lifespan context manager to create database tables.
+    """
     await create_db_and_tables()
     yield
 
@@ -42,4 +46,7 @@ app.include_router(
 
 @app.get("/authenticated-route")
 async def authenticated_route(user: User = Depends(current_active_user)):
+    """
+    Authenticated route that returns a greeting message.
+    """
     return {"message": f"Hello {user.email}!"}

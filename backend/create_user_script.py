@@ -1,3 +1,6 @@
+"""
+Script to create a user.
+"""
 import asyncio
 from create_user import create_user
 

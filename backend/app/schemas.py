@@ -1,15 +1,26 @@
+"""
+Schemas for user-related data.
+"""
 import uuid
 
 from fastapi_users import schemas
 
 
 class UserRead(schemas.BaseUser[uuid.UUID]):
-    pass
+    """
+    Schema for reading user data.
+    """
+
 
 
 class UserCreate(schemas.BaseUserCreate):
-    pass
+    """
+    Schema for creating a new user.
+    """
+
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    pass
+    """
+    Schema for updating user data.
+    """

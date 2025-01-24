@@ -1,9 +1,16 @@
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+"""
+Database models.
+"""
+from sqlalchemy.orm import DeclarativeBase
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID
-from sqlalchemy import String
 
 class Base(DeclarativeBase):
-    pass
+    """
+    Base class for all models.
+    """
+
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
+    """
+    User model.
+    """
