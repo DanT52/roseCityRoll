@@ -1,6 +1,7 @@
+const BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:8000';
 
 export const login = async (username: string, password: string) => {
-  const res = await fetch('http://localhost:8000/auth/jwt/login', {
+  const res = await fetch(BACKEND_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ username, password })
