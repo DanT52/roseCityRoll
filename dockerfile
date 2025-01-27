@@ -26,6 +26,8 @@ RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 
 # Copy frontend build output to Nginx
 COPY --from=frontend-build /app/dist /usr/share/nginx/html
+COPY default.conf /etc/nginx/conf.d/default.conf
+
 
 # Copy a simple startup script
 COPY start.sh /app/start.sh
