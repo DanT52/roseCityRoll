@@ -1,9 +1,22 @@
 services:
-  my_app:
-    build: .
-    container_name: my_app_container
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend_container
     ports:
       - "80:80"         # Nginx
+    environment:
+      VITE_REACT_APP_BACKEND_URL: "http://localhost:8000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend_container
+    ports:
       - "8000:8000"     # FastAPI
     environment:
       SECRET: "my_secret_value"
