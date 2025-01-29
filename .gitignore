@@ -81,3 +81,4 @@ htmlcov/
 .python-version
 .pdm.toml
 __pypackages__/
+.env.disabled

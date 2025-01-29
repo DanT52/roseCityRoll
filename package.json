@@ -10,13 +10,14 @@
   "scripts": {
     "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && python main.py --reload\"",
     "lint-front": "cd frontend && eslint .",
-    "lint-back": "pylint backend",
+    "lint-back": "cd backend && pylint .",
     "lint-all": "npm run lint-front && npm run lint-back",
     "prepare": "husky"
   },
   "lint-staged": {
     "frontend/**/*.{ts,tsx}": [
-      "frontend/node_modules/.bin/eslint --fix --config frontend/eslint.config.js"
+      "cd frontend && eslint --fix",
+      "cd frontend && prettier --write"
     ],
     "backend/**/*.py": [
       "pylint"
