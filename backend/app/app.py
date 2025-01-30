@@ -50,3 +50,11 @@ async def authenticated_route(user: User = Depends(current_active_user)):
     Authenticated route that returns a greeting message.
     """
     return {"message": f"Hello {user.email}!"}
+
+
+@app.get("/auth/check")
+async def check_auth(user: User = Depends(current_active_user)):
+    """
+    Route to check if the user is authenticated.
+    """
+    return {"authenticated": True}

@@ -21,3 +21,15 @@ export const logout = () => {
 };
 
 export const isLoggedIn = () => !!localStorage.getItem('token');
+
+export const checkAuth = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+
+  const res = await fetch(BACKEND_URL + "/auth/check", {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  return res.ok;
+};

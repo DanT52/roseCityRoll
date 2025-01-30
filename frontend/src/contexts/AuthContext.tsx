@@ -1,6 +1,5 @@
-
-import React, { useState, createContext, useContext, ReactNode } from 'react';
-import { login as apiLogin, logout as apiLogout } from '../services/auth';
+import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import { login as apiLogin, logout as apiLogout, checkAuth as apiCheckAuth } from '../services/auth';
 
 interface AuthContextData {
   isLoggedIn: boolean;
@@ -11,7 +10,15 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData | null>(null);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem('token'));
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authenticated = await apiCheckAuth();
+      setIsLoggedIn(authenticated);
+    };
+    verifyAuth();
+  }, []);
 
   const login = async (username: string, password: string) => {
     await apiLogin(username, password);
