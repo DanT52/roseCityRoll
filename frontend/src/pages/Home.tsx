@@ -2,19 +2,10 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import RoseCityRollBanner from '../assets/images/roseCityRoll.png';
 import { useFeatures } from '../contexts/FeatureContext';
+import Announcements from './Announcements';
 
 const Home: React.FC = () => {
   const { features } = useFeatures();
-
-  // Mock announcements - in production, these would come from an API
-  const announcements = [
-    {
-      id: '1',
-      title: 'Registration Now Open!',
-      content: 'Sign up for Big Rose City Roll 2024 is now available.',
-      date: '2024-03-15',
-    },
-  ];
 
   return (
     <div className="space-y-12">
@@ -36,18 +27,9 @@ const Home: React.FC = () => {
       </section>
 
       {/* Announcements Section */}
-      {features.announcements?.enabled && announcements.length > 0 && (
+      {features.announcements?.enabled && (
         <section className="bg-accent-100 rounded-lg p-8 mt-4">
-          <h2 className="font-heading text-2xl mb-4 text-white">Announcements</h2>
-          <div className="space-y-4">
-            {announcements.map((announcement) => (
-              <div key={announcement.id} className="bg-accent-50 rounded p-4">
-                <h3 className="font-heading text-xl mb-2 text-white">{announcement.title}</h3>
-                <p className="text-accent-800 mb-2">{announcement.content}</p>
-                <p className="text-sm text-accent-600">{new Date(announcement.date).toLocaleDateString()}</p>
-              </div>
-            ))}
-          </div>
+          <Announcements />
         </section>
       )}
 

@@ -2,6 +2,7 @@
 Schemas for user-related data.
 """
 import uuid
+from datetime import datetime
 
 from fastapi_users import schemas
 from pydantic import BaseModel
@@ -41,3 +42,24 @@ class FeatureUpdate(FeatureBase):
 class FeatureInDB(FeatureBase):
     class Config:
         from_attributes = True
+
+
+class AnnouncementBase(BaseModel):
+    title: str
+    subtext: str
+    published_at: datetime
+
+
+class AnnouncementCreate(AnnouncementBase):
+    pass
+
+
+class AnnouncementUpdate(AnnouncementBase):
+    pass
+
+
+class AnnouncementInDB(AnnouncementBase):
+    id: int
+
+    class Config:
+        orm_mode = True

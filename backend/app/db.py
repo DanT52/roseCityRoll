@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from app.models import Base, User, Feature
+from app.models import Base, User, Feature, Announcement
 from contextlib import asynccontextmanager
 from sqlalchemy.future import select
 
@@ -44,6 +44,12 @@ async def get_feature_db(session: AsyncSession = Depends(get_async_session)):
     """
     yield SQLAlchemyUserDatabase(session, Feature)
 
+async def get_announcement_db(session: AsyncSession = Depends(get_async_session)):
+    """
+    Get the announcement database.
+    """
+    yield SQLAlchemyUserDatabase(session, Announcement)
+
 @asynccontextmanager
 async def get_db_session() -> AsyncSession:
     async with async_session_maker() as session:
@@ -62,3 +68,12 @@ async def initialize_features():
                 new_feature = Feature(name=feature_name, enabled=True)
                 session.add(new_feature)
         await session.commit()
+
+# Ensure announcements table is initialized
+async def initialize_announcements():
+    """
+    Initialize the announcements table in the database.
+    """
+    async with async_session_maker() as session:
+        await session.run_sync(Base.metadata.create_all)
+

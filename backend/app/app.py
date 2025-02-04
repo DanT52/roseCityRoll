@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.db import User, create_db_and_tables, initialize_features
 from app.users import auth_backend, cookie_auth_backend, current_active_user, fastapi_users
 from app.features import router as features_router
+from app.announcements import router as announcements_router
 
 
 @asynccontextmanager
@@ -46,6 +47,7 @@ app.include_router(
 # )
 
 app.include_router(features_router, prefix="/features", tags=["features"])
+app.include_router(announcements_router, prefix="/announcements", tags=["announcements"])
 
 # @app.get("/authenticated-route")
 # async def authenticated_route(user: User = Depends(current_active_user)):
