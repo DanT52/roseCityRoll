@@ -4,10 +4,12 @@ import { Instagram, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import roseCityIcon from '../assets/images/roseCityIcon.png';
 import { useAuth } from '../contexts/AuthContext';
+import { useFeatures } from '../contexts/FeatureContext';
 
 const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLoggedIn, logout } = useAuth();
+  const { features } = useFeatures();
   const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -15,6 +17,20 @@ const Layout: React.FC = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const renderLink = (to: string, label: string) => {
+    const feature = features[label.toLowerCase()];
+    if (!feature) return null;
+
+    if (!isLoggedIn && !feature.enabled) return null;
+
+    return (
+      <Link to={to} className="text-text-200 hover:text-primary-500">
+        {label}
+        {isLoggedIn && !feature.enabled && <span className="text-red-500 ml-2">(Disabled)</span>}
+      </Link>
+    );
   };
 
   return (
@@ -29,9 +45,9 @@ const Layout: React.FC = () => {
             
             <div className="hidden md:flex items-center space-x-6">
               <Link to="/" className="text-text-200 hover:text-primary-500">Home</Link>
-              <Link to="/schedule" className="text-text-200 hover:text-primary-500">Schedule</Link>
-              <Link to="/faq" className="text-text-200 hover:text-primary-500">FAQ</Link>
-              <Link to="/thanks" className="text-text-200 hover:text-primary-500">Thanks</Link>
+              {renderLink("/schedule", "Schedule")}
+              {renderLink("/faq", "FAQ")}
+              {renderLink("/thanks", "Thanks")}
               <a 
                 href="https://www.instagram.com/bigrosecityroll/" 
                 target="_blank" 
@@ -62,9 +78,9 @@ const Layout: React.FC = () => {
           {isMenuOpen && (
             <div className="md:hidden mt-4 space-y-4">
               <Link to="/" className="block text-text-200 hover:text-primary-500">Home</Link>
-              <Link to="/schedule" className="block text-text-200 hover:text-primary-500">Schedule</Link>
-              <Link to="/faq" className="block text-text-200 hover:text-primary-500">FAQ</Link>
-              <Link to="/thanks" className="block text-text-200 hover:text-primary-500">Thanks</Link>
+              {renderLink("/schedule", "Schedule")}
+              {renderLink("/faq", "FAQ")}
+              {renderLink("/thanks", "Thanks")}
               <a 
                 href="https://www.instagram.com/bigrosecityroll/" 
                 target="_blank" 

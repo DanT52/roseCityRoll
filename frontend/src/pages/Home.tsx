@@ -1,8 +1,11 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import RoseCityRollBanner from '../assets/images/roseCityRoll.png';
+import { useFeatures } from '../contexts/FeatureContext';
 
 const Home: React.FC = () => {
+  const { features } = useFeatures();
+
   // Mock announcements - in production, these would come from an API
   const announcements = [
     {
@@ -17,7 +20,6 @@ const Home: React.FC = () => {
     <div className="space-y-12">
       {/* Hero Section */}
       <section className="relative flex items-center justify-center">
-        
         <div className="relative z-10 text-center text-900">
           <img src={RoseCityRollBanner} alt="Big Rose City Roll Banner" className="w-full max-w-xl mx-auto  mb-4" />
           <p className="text-xl mb-4 max-w-2xl mx-auto">
@@ -34,7 +36,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Announcements Section */}
-      {announcements.length > 0 && (
+      {features.announcements?.enabled && announcements.length > 0 && (
         <section className="bg-accent-100 rounded-lg p-8 mt-4">
           <h2 className="font-heading text-2xl mb-4 text-white">Announcements</h2>
           <div className="space-y-4">
