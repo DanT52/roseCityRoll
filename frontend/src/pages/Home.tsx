@@ -1,12 +1,35 @@
 import React from 'react';
 import { ArrowRight, Instagram, Link as LinkIcon } from 'lucide-react';
+import Countdown from 'react-countdown';
 import RoseCityRollBanner from '../assets/images/RoseCityRoll.png';
 
 const Home: React.FC = () => {
-  // Mock announcements - in production, these would come from an API
-  const announcements = [
-    
-  ];
+  
+
+  const eventDate = new Date('2025-06-26T18:00:00-07:00'); // 6 PM PDT on June 26th, 2025
+
+  const countdownRenderer = ({ days, hours, minutes, completed }: any) => {
+    if (completed) {
+      return <span className="text-primary-500">The event has started!</span>;
+    }
+
+    return (
+      <div className="flex justify-center gap-6 text-text-100">
+        <div className="text-center">
+          <div className="text-4xl font-heading">{days}</div>
+          <div className="text-sm uppercase tracking-wide">Days</div>
+        </div>
+        <div className="text-center">
+          <div className="text-4xl font-heading">{hours}</div>
+          <div className="text-sm uppercase tracking-wide">Hours</div>
+        </div>
+        <div className="text-center">
+          <div className="text-4xl font-heading">{minutes}</div>
+          <div className="text-sm uppercase tracking-wide">Minutes</div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-12">
@@ -14,7 +37,13 @@ const Home: React.FC = () => {
       <section className="relative flex items-center justify-center">
         
         <div className="relative z-10 text-center text-900">
-          <img src={RoseCityRollBanner} alt="Big Rose City Roll Banner" className="w-full max-w-xl mx-auto  mb-4" />
+          <img src={RoseCityRollBanner} alt="Big Rose City Roll Banner" className="w-full max-w-xl mx-auto  mb-0" />
+          
+          {/* Countdown Timer */}
+          <div className="mb-8">
+            <Countdown date={eventDate} renderer={countdownRenderer} />
+          </div>
+
           <p className="text-xl mb-4 max-w-2xl mx-auto">
             Join Portland's first Big Rose City Roll from June 26th to June 29th 2025 for a week of skating,
             community building, and unforgettable experiences.
@@ -40,21 +69,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Announcements Section */}
-      {announcements.length > 0 && (
-        <section className="bg-accent-100 rounded-lg p-8 mt-4">
-          <h2 className="font-heading text-2xl mb-4 text-white">Announcements</h2>
-          <div className="space-y-4">
-            {announcements.map((announcement) => (
-              <div key={announcement.id} className="bg-accent-50 rounded p-4">
-                <h3 className="font-heading text-xl mb-2 text-white">{announcement.title}</h3>
-                <p className="text-accent-800 mb-2">{announcement.content}</p>
-                <p className="text-sm text-accent-600">{new Date(announcement.date).toLocaleDateString()}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      
 
       {/* Event Overview Section */}
       <section className="max-w-4xl mx-auto">
