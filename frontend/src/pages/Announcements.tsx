@@ -98,8 +98,8 @@ const Announcements: React.FC = () => {
 
   return (
     <div className="space-y-8 p-4">
-      <div className="flex justify-between items-center">
-        <h2 className="font-heading text-2xl text-white">Announcements</h2>
+      <div className="flex flex-col sm:flex-row justify-between items-center">
+        <h2 className="font-heading text-2xl text-white mb-4 sm:mb-0">Announcements</h2>
         {isAdmin && !showForm && (
           <button 
             onClick={() => setShowForm(true)} 
