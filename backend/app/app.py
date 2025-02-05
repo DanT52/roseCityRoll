@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db import User, create_db_and_tables, initialize_features
+from app.db import User, create_db_and_tables, initialize_features, initialize_announcements
 from app.users import auth_backend, cookie_auth_backend, current_active_user, fastapi_users
 from app.features import router as features_router
 from app.announcements import router as announcements_router
@@ -19,6 +19,7 @@ async def lifespan(_app: FastAPI):
     """
     await create_db_and_tables()
     await initialize_features()
+    await initialize_announcements()
     yield
 
 

@@ -74,6 +74,6 @@ async def initialize_announcements():
     """
     Initialize the announcements table in the database.
     """
-    async with async_session_maker() as session:
-        await session.run_sync(Base.metadata.create_all)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
