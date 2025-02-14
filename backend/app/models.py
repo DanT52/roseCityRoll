@@ -36,3 +36,13 @@ class Announcement(Base):
     title = Column(String, nullable=False)
     subtext = Column(String, nullable=False)
     published_at = Column(DateTime(timezone=True), nullable=False)
+
+
+class FAQ(Base):
+    """
+    FAQ model.
+    """
+    __tablename__ = "faqs"
+    id = Column(String, primary_key=True, index=True)
+    question = Column(String, nullable=False)
+    answer = Column(String, nullable=False)

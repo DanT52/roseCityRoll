@@ -77,3 +77,14 @@ async def initialize_announcements():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+# Ensure FAQs table is initialized
+async def initialize_faqs():
+    """
+    Initialize the FAQs table in the database.
+    """
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+# Note: Ensure your FAQ model defines the "id" column with an autogeneration
+# mechanism (e.g. default=uuid4() or autoincrement=True) to avoid null id errors.
+

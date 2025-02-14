@@ -6,10 +6,11 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db import User, create_db_and_tables, initialize_features, initialize_announcements
+from app.db import User, create_db_and_tables, initialize_features, initialize_announcements, initialize_faqs
 from app.users import auth_backend, cookie_auth_backend, current_active_user, fastapi_users
 from app.features import router as features_router
 from app.announcements import router as announcements_router
+from app.faqs import router as faqs_router
 
 
 @asynccontextmanager
@@ -20,6 +21,7 @@ async def lifespan(_app: FastAPI):
     await create_db_and_tables()
     await initialize_features()
     await initialize_announcements()
+    await initialize_faqs()  # Initialize FAQs table
     yield
 
 
@@ -49,6 +51,7 @@ app.include_router(
 
 app.include_router(features_router, prefix="/features", tags=["features"])
 app.include_router(announcements_router, prefix="/announcements", tags=["announcements"])
+app.include_router(faqs_router, prefix="/faqs", tags=["faqs"])
 
 # @app.get("/authenticated-route")
 # async def authenticated_route(user: User = Depends(current_active_user)):

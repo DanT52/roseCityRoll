@@ -63,3 +63,20 @@ class AnnouncementInDB(AnnouncementBase):
 
     class Config:
         from_attributes = True
+
+
+class FAQBase(BaseModel):
+    question: str
+    answer: str
+
+class FAQCreate(FAQBase):
+    pass
+
+class FAQUpdate(FAQBase):
+    pass
+
+class FAQInDB(FAQBase):
+    id: str
+
+    class Config:
+        from_attributes = True

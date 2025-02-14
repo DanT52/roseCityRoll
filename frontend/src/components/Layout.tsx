@@ -26,7 +26,7 @@ const Layout: React.FC = () => {
     if (!isLoggedIn && !feature.enabled) return null;
 
     return (
-      <Link to={to} className="text-text-200 hover:text-primary-500">
+      <Link to={to} className={`text-text-200 hover:text-primary-500 ${isMenuOpen ? 'block' : ''}`}>
         {label}
         {isLoggedIn && !feature.enabled && <span className="text-red-500 ml-2">(Disabled)</span>}
       </Link>
