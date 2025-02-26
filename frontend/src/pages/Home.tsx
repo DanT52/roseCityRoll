@@ -73,8 +73,11 @@ const Home: React.FC = () => {
 
       {/* Event Overview Section */}
       <section className="max-w-4xl mx-auto">
-        <h2 className="font-heading text-3xl mb-6 text-text-100">About the Event</h2>
-        <div className="prose text-text-200">
+        <h2 
+          className="font-heading text-3xl mb-6 text-text-100">About the Event</h2>
+        <div
+        style={{ textShadow: '4px 4px 4px rgba(0, 0, 0, 0.2)' }}
+         className="prose text-text-100">
             <p className="mb-4">
             Big Rose City Roll is an exciting event that brings together inline and quad skaters!
             </p>

@@ -38,3 +38,6 @@ dist/
 *.lock
 *.cache
 *.tmp
+.env
+.gitignore
+__PYCACHE__
