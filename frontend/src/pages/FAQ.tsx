@@ -209,7 +209,7 @@ const FAQPage: React.FC = () => {
           </div>
         ))}
         {faqs.length === 0 && (
-          <p className="text-black">No FAQs found.</p>
+          <p className="text-white">No FAQs found.</p>
         )}
       </div>
     </div>
