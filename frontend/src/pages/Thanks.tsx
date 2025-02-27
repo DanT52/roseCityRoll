@@ -1,51 +1,63 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+
+const thanksContent = `# Thank You
+
+Big Rose City Roll wouldn't be possible without the dedication and support of our amazing community. We'd like to extend our heartfelt thanks to:
+
+## Event Organizers
+* Sarah Johnson - Event Director
+* Mike Wilson - Route Planning Lead
+* Emily Chen - Community Outreach
+
+## Local Partners
+* Portland Inline Skating Group
+* Rose City Rollers
+* PDX Skate Scene
+
+## Volunteers
+Special thanks to our dedicated team of volunteer route leaders, safety marshals, and support crew who make each skating session safe and enjoyable.
+
+## Website Credits
+* Website Design & Development - StackBlitz Team
+* Logo Design - Creative Portland
+* Photography - Local Skating Community
+
+## Additional Resources
+For more information, visit [our website](https://www.example.com).
+`;
 
 const Thanks: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="font-heading text-4xl mb-8 text-text-100">Thank You</h1>
-      
-      <div className="prose text-text-200">
-        <p className="mb-6">
-          Big Rose City Roll wouldn&apos;t be possible without the dedication and support of our amazing
-          community. We&apos;d like to extend our heartfelt thanks to:
-        </p>
-
-        <section className="mb-8">
-          <h2 className="font-heading text-2xl mb-4 text-text-100">Event Organizers</h2>
-          <ul className="list-disc list-inside space-y-2 text-text-300">
-            <li>Sarah Johnson - Event Director</li>
-            <li>Mike Wilson - Route Planning Lead</li>
-            <li>Emily Chen - Community Outreach</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="font-heading text-2xl mb-4 text-text-100">Local Partners</h2>
-          <ul className="list-disc list-inside space-y-2 text-text-300">
-            <li>Portland Inline Skating Group</li>
-            <li>Rose City Rollers</li>
-            <li>PDX Skate Scene</li>
-          </ul>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="font-heading text-2xl mb-4 text-text-100">Volunteers</h2>
-          <p className="text-text-300">
-            Special thanks to our dedicated team of volunteer route leaders, safety marshals, and
-            support crew who make each skating session safe and enjoyable.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="font-heading text-2xl mb-4 text-text-100">Website Credits</h2>
-          <ul className="list-disc list-inside space-y-2 text-text-300">
-            <li>Website Design & Development - StackBlitz Team</li>
-            <li>Logo Design - Creative Portland</li>
-            <li>Photography - Local Skating Community</li>
-          </ul>
-        </section>
-      </div>
+      <ReactMarkdown
+        components={{
+          h1: ({children}) => (
+            <h1 className="font-heading text-4xl mb-8 text-text-100">{children}</h1>
+          ),
+          h2: ({children}) => (
+            <h2 className="font-heading text-2xl mb-4 text-text-100">{children}</h2>
+          ),
+          p: ({children}) => (
+            <p className="mb-6 text-text-200">{children}</p>
+          ),
+          ul: ({children}) => (
+            <ul className="list-disc list-inside space-y-2 text-text-300 mb-8">{children}</ul>
+          ),
+          a: ({children, href}) => (
+            <a 
+              href={href} 
+              className="text-primary-500 hover:text-primary-600 underline transition-colors"
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              {children}
+            </a>
+          ),
+        }}
+      >
+        {thanksContent}
+      </ReactMarkdown>
     </div>
   );
 };
