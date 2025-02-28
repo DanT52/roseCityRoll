@@ -15,6 +15,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const verifyAuth = async () => {
       const authenticated = await apiCheckAuth();
+      if (!authenticated) {
+        apiLogout(); // remove token if expired
+      }
       setIsLoggedIn(authenticated);
     };
     verifyAuth();
