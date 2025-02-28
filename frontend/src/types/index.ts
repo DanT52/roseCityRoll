@@ -10,12 +10,15 @@ export interface DaySchedule {
   day: string;
   date: string;
   meetingPoint: string;
+  endPoint?: string;
   startTime: string;
   endTime: string;
   routeDescription: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: '🐰 Bunny' | '🟢 Green' | '🔵 Blue' | '⚫ Black';
   distance: string;
   leader: string;
+  routeMapEmbed?: string;
+  startPointEmbed?: string;
 }
 
 export interface FAQ {
