@@ -46,3 +46,12 @@ class FAQ(Base):
     id = Column(String, primary_key=True, index=True)
     question = Column(String, nullable=False)
     answer = Column(String, nullable=False)
+
+
+class Thanks(Base):
+    """
+    Model for storing a thanks string.
+    """
+    __tablename__ = "thanks"
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(String, nullable=False, default="")

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from app.models import Base, User, Feature, Announcement
+from app.models import Base, User, Feature, Announcement, FAQ, Thanks  # Added Thanks
 from contextlib import asynccontextmanager
 from sqlalchemy.future import select
 
@@ -85,6 +85,17 @@ async def initialize_faqs():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-# Note: Ensure your FAQ model defines the "id" column with an autogeneration
-# mechanism (e.g. default=uuid4() or autoincrement=True) to avoid null id errors.
+async def initialize_thanks():
+    """
+    Initialize the thanks record in the database.
+    """
+    async with async_session_maker() as session:
+        result = await session.execute(select(Thanks))
+        thanks_obj = result.scalar_one_or_none()
+        if thanks_obj is None:
+            new_thanks = Thanks(content="")
+            session.add(new_thanks)
+            await session.commit()
+
+
 

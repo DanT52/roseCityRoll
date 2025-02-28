@@ -80,3 +80,11 @@ class FAQInDB(FAQBase):
 
     class Config:
         from_attributes = True
+
+# Add schemas for Thanks.
+class ThanksRead(BaseModel):
+    id: int
+    content: str
+
+class ThanksUpdate(BaseModel):
+    content: str
