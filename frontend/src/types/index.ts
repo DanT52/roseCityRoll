@@ -3,6 +3,12 @@ export interface Announcement {
   title: string;
   content: string;
   date: string;
+  subtext?: string;
+  published_at?: string;
+  link?: {
+    text: string;
+    url: string;
+  };
 }
 
 export interface DaySchedule {
@@ -18,8 +24,13 @@ export interface DaySchedule {
   embeddedRouteUrl?: string;
 }
 
+
 export interface FAQ {
   id: string;
   question: string;
   answer: string;
+  link?: {
+    text: string;
+    url: string;
+  };
 }

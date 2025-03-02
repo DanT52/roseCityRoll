@@ -23,7 +23,11 @@ const FAQPage: React.FC = () => {
     {
       id: '3',
       question: "What lodging options are available?",
-      answer: "Hotel and accommodation information will be announced soon."
+      answer: "North West Portland Hostel will be where this event is hosted. We're grateful to have the support of this beautiful place and its owners for our first Big Rose City Roll 🌹. You can already start reserving your rooms on their website with the promo code BigRoseCityRoll2025.",
+      link: {
+        text: "Book your room here",
+        url: "https://hotels.cloudbeds.com/en/reservation/IyNleY/?currency=usd&checkin=2025-06-26&checkout=2025-06-29&promo=BigRoseCityRoll2025"
+      }
     },
     {
       id: '4',
@@ -66,6 +70,16 @@ const FAQPage: React.FC = () => {
             {expandedQuestion === faq.id && (
               <div className="p-6 bg-background-950">
                 <p className="text-text-300 whitespace-pre-line">{faq.answer}</p>
+                {faq.link && (
+                  <a 
+                    href={faq.link.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-block mt-3 text-primary-500 hover:text-primary-400 font-medium underline transition duration-200"
+                  >
+                    {faq.link.text} →
+                  </a>
+                )}
               </div>
             )}
           </div>

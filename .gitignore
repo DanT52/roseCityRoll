@@ -41,3 +41,4 @@ dist/
 .env
 .gitignore
 __PYCACHE__
+.env.disabled

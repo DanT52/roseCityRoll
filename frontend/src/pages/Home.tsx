@@ -1,10 +1,24 @@
 import React from 'react';
-import { ArrowRight, Instagram, Link as LinkIcon } from 'lucide-react';
+import { ArrowRight, Instagram, Link as LinkIcon, ExternalLink } from 'lucide-react';
 import Countdown from 'react-countdown';
 import RoseCityRollBanner from '../assets/images/RoseCityRoll.png';
+import { Announcement } from '../types';
 
 const Home: React.FC = () => {
   
+  // Static announcement data
+  const announcements: Announcement[] = [
+    {
+      id: '1',
+      title: 'Accommodations / Lodging',
+      content: 'You can now start reserving your rooms at NW Portland Hostel if you are traveling for the event.',
+      date: '02/20/2024, 12:00 PM',
+      link: {
+        text: 'Watch Announcement Video',
+        url: 'https://www.instagram.com/p/DGTbpafyOtr/'
+      }
+    }
+  ];
 
   const eventDate = new Date('2025-06-26T18:00:00-07:00'); // 6 PM PDT on June 26th, 2025
 
@@ -69,8 +83,30 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Announcements Section */}
+      <section className="bg-accent-100 rounded-lg p-8 mt-4">
+        <h2 className="font-heading text-2xl mb-4 text-white">Announcements</h2>
+        <div className="space-y-4">
+          {announcements.map((announcement) => (
+            <div key={announcement.id} className="bg-accent-50 rounded p-4">
+              <h3 className="font-heading text-xl mb-2 text-white">{announcement.title}</h3>
+              <p className="text-accent-800 mb-2">{announcement.content}</p>
+              {announcement.link && (
+                <a 
+                  href={announcement.link.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center text-primary-500 hover:text-primary-600 font-medium mb-2"
+                >
+                  {announcement.link.text} <ExternalLink className="ml-1 w-4 h-4" />
+                </a>
+              )}
+              <p className="text-sm text-accent-600">{announcement.date}</p>
+            </div>
+          ))}
+        </div>
+      </section>
       
-
       {/* Event Overview Section */}
       <section className="max-w-4xl mx-auto">
         <h2 
