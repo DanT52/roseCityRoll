@@ -19,11 +19,11 @@ async def lifespan(_app: FastAPI):
     """
     Lifespan context manager to create database tables and initialize features.
     """
-    await create_db_and_tables()
-    await initialize_features()
-    await initialize_announcements()
-    await initialize_faqs()  # Initialize FAQs table
-    await initialize_thanks()  # Initialize thanks record
+    # await create_db_and_tables()
+    # await initialize_features()
+    # await initialize_announcements()
+    # await initialize_faqs()  # Initialize FAQs table
+    # await initialize_thanks()  # Initialize thanks record
     yield
 
 

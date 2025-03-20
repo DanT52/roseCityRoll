@@ -6,6 +6,7 @@ from datetime import datetime
 
 from fastapi_users import schemas
 from pydantic import BaseModel
+from typing import Optional
 
 
 class UserRead(schemas.BaseUser[uuid.UUID]):
@@ -48,6 +49,8 @@ class AnnouncementBase(BaseModel):
     title: str
     subtext: str
     published_at: datetime
+    link: Optional[str] = None
+    linktext: Optional[str] = None
 
 
 class AnnouncementCreate(AnnouncementBase):

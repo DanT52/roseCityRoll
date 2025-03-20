@@ -36,6 +36,8 @@ class Announcement(Base):
     title = Column(String, nullable=False)
     subtext = Column(String, nullable=False)
     published_at = Column(DateTime(timezone=True), nullable=False)
+    link = Column(String, nullable=True)
+    linktext = Column(String, nullable=True)
 
 
 class FAQ(Base):
