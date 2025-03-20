@@ -32,8 +32,7 @@ const FAQPage: React.FC = () => {
     {
       id: '4',
       question: "What are the difficulty ratings?",
-      answer: "We use a four-tier system:\n\n" +
-        "🐰 Bunny: 4-5 mph, smooth surfaces, mostly flat\n" +
+      answer: "We use a difficulty system:\n\n" +
         "🟢 Green: 6-7 mph, rougher surfaces, some hills\n" +
         "🔵 Blue: 8-10 mph, moderate terrain, hills up to 25 mph\n" +
         "⚫ Black: 10-12+ mph, challenging terrain, steep hills"
