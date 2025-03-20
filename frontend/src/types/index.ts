@@ -3,6 +3,8 @@ export interface Announcement {
   title: string;
   subtext: string;
   published_at: string;
+  link?: string;
+  linktext?: string;
 }
 
 export interface DaySchedule {

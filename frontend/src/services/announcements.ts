@@ -8,7 +8,15 @@ export const getLatestAnnouncements = async () => {
   return await res.json();
 };
 
-export const createAnnouncement = async (announcement: { title: string; subtext: string; published_at: string; }) => {
+export interface AnnouncementCreateUpdate {
+  title: string;
+  subtext: string;
+  published_at: string;
+  link?: string;
+  linktext?: string;
+}
+
+export const createAnnouncement = async (announcement: AnnouncementCreateUpdate) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('Not authenticated');
   const res = await fetch(BACKEND_URL + "/announcements/", {
@@ -25,7 +33,7 @@ export const createAnnouncement = async (announcement: { title: string; subtext:
   return await res.json();
 };
 
-export const updateAnnouncement = async (id: number, announcement: { title: string; subtext: string; published_at: string; }) => {
+export const updateAnnouncement = async (id: number, announcement: AnnouncementCreateUpdate) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('Not authenticated');
   const res = await fetch(BACKEND_URL + `/announcements/${id}`, {

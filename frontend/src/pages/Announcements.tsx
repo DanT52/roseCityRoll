@@ -7,15 +7,23 @@ dayjs.extend(timezone);
 import { Announcement } from '../types';
 import { getLatestAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement } from '../services/announcements';
 
+// Import the ExternalLink icon from lucide-react
+import { ExternalLink } from 'lucide-react';
+
 const Announcements: React.FC = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [newTitle, setNewTitle] = useState('');
   const [newSubtext, setNewSubtext] = useState('');
+  const [newLink, setNewLink] = useState('');
+  const [newLinkText, setNewLinkText] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editSubtext, setEditSubtext] = useState('');
+  const [editLink, setEditLink] = useState('');
+  const [editLinkText, setEditLinkText] = useState('');
+  const [editDateTime, setEditDateTime] = useState('');
 
   useEffect(() => {
     // Check for token to determine admin status
@@ -38,9 +46,17 @@ const Announcements: React.FC = () => {
     if (newTitle && newSubtext) {
       try {
         const published_at = dayjs().tz('America/Los_Angeles').format();
-        await createAnnouncement({ title: newTitle, subtext: newSubtext, published_at });
+        await createAnnouncement({ 
+          title: newTitle, 
+          subtext: newSubtext, 
+          published_at,
+          link: newLink || undefined,
+          linktext: newLinkText || undefined
+        });
         setNewTitle('');
         setNewSubtext('');
+        setNewLink('');
+        setNewLinkText('');
         setShowForm(false);
         loadAnnouncements();
       } catch (error) {
@@ -53,26 +69,38 @@ const Announcements: React.FC = () => {
     setEditingId(Number(announcement.id));
     setEditTitle(announcement.title);
     setEditSubtext(announcement.subtext);
+    setEditLink(announcement.link || '');
+    setEditLinkText(announcement.linktext || '');
+    // Convert to local datetime format for input element
+    setEditDateTime(dayjs.utc(announcement.published_at).tz('America/Los_Angeles').format('YYYY-MM-DDTHH:mm'));
   };
 
   const cancelEditing = () => {
     setEditingId(null);
     setEditTitle('');
     setEditSubtext('');
+    setEditLink('');
+    setEditLinkText('');
+    setEditDateTime('');
   };
 
   const handleEdit = async (e: React.FormEvent, announcement: Announcement) => {
     e.preventDefault();
     if (editTitle && editSubtext) {
       try {
+        // Convert local datetime back to UTC for storage
+        const published_at = editDateTime 
+          ? dayjs.tz(editDateTime, 'America/Los_Angeles').utc().format()
+          : announcement.published_at;
+        
         await updateAnnouncement(Number(announcement.id), { 
           title: editTitle, 
-          subtext: editSubtext, 
-          published_at: announcement.published_at // Keep original timestamp
+          subtext: editSubtext,
+          published_at,
+          link: editLink || undefined,
+          linktext: editLinkText || undefined
         });
-        setEditingId(null);
-        setEditTitle('');
-        setEditSubtext('');
+        cancelEditing();
         loadAnnouncements();
       } catch (error) {
         console.error(error);
@@ -133,6 +161,24 @@ const Announcements: React.FC = () => {
                 required
               />
             </div>
+            <div>
+              <input
+                type="text"
+                value={newLink}
+                onChange={(e) => setNewLink(e.target.value)}
+                placeholder="Link URL (optional)"
+                className="w-full p-2 rounded bg-accent-100 text-accent-900 placeholder-accent-600"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                value={newLinkText}
+                onChange={(e) => setNewLinkText(e.target.value)}
+                placeholder="Link Text (optional)"
+                className="w-full p-2 rounded bg-accent-100 text-accent-900 placeholder-accent-600"
+              />
+            </div>
             <div className="flex space-x-2">
               <button 
                 type="submit"
@@ -174,6 +220,33 @@ const Announcements: React.FC = () => {
                     required
                   />
                 </div>
+                <div>
+                  <input
+                    type="text"
+                    value={editLink}
+                    onChange={(e) => setEditLink(e.target.value)}
+                    placeholder="Link URL (optional)"
+                    className="w-full p-2 rounded bg-accent-100 text-accent-900 placeholder-accent-600"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    value={editLinkText}
+                    onChange={(e) => setEditLinkText(e.target.value)}
+                    placeholder="Link Text (optional)"
+                    className="w-full p-2 rounded bg-accent-100 text-accent-900 placeholder-accent-600"
+                  />
+                </div>
+                <div>
+                  <label className="block text-accent-800 mb-1">Publication Date/Time</label>
+                  <input
+                    type="datetime-local"
+                    value={editDateTime}
+                    onChange={(e) => setEditDateTime(e.target.value)}
+                    className="w-full p-2 rounded bg-accent-100 text-accent-900"
+                  />
+                </div>
                 <div className="flex space-x-2">
                   <button 
                     type="submit"
@@ -194,6 +267,18 @@ const Announcements: React.FC = () => {
               <>
                 <h3 className="font-heading text-xl mb-2 text-white">{announcement.title}</h3>
                 <p className="text-accent-800 mb-2">{announcement.subtext}</p>
+                {announcement.link && announcement.linktext && (
+                  <div className="mb-2">
+                    <a 
+                      href={announcement.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="inline-flex items-center text-primary-500 hover:text-primary-600 font-medium"
+                    >
+                      {announcement.linktext} <ExternalLink className="ml-1 w-4 h-4" />
+                    </a>
+                  </div>
+                )}
                 <p className="text-sm text-accent-600">{formatDate(announcement.published_at)}</p>
                 {isAdmin && (
                   <div className="flex space-x-2 mt-2">
