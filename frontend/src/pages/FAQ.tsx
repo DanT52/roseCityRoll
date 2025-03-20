@@ -10,9 +10,13 @@ const FAQPage: React.FC = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
+  const [newLink, setNewLink] = useState('');
+  const [newLinkText, setNewLinkText] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editQuestion, setEditQuestion] = useState('');
   const [editAnswer, setEditAnswer] = useState('');
+  const [editLink, setEditLink] = useState('');
+  const [editLinkText, setEditLinkText] = useState('');
 
   useEffect(() => {
     setIsAdmin(!!localStorage.getItem('token'));
@@ -34,9 +38,16 @@ const FAQPage: React.FC = () => {
     e.preventDefault();
     if (newQuestion && newAnswer) {
       try {
-        await createFaq({ question: newQuestion, answer: newAnswer });
+        await createFaq({ 
+          question: newQuestion, 
+          answer: newAnswer,
+          link: newLink || undefined,
+          linktext: newLinkText || undefined
+        });
         setNewQuestion('');
         setNewAnswer('');
+        setNewLink('');
+        setNewLinkText('');
         setShowCreateForm(false);
         loadFaqs();
       } catch (error) {
@@ -49,19 +60,28 @@ const FAQPage: React.FC = () => {
     setEditingId(faq.id);
     setEditQuestion(faq.question);
     setEditAnswer(faq.answer);
+    setEditLink(faq.link || '');
+    setEditLinkText(faq.linktext || '');
   };
 
   const cancelEditing = () => {
     setEditingId(null);
     setEditQuestion('');
     setEditAnswer('');
+    setEditLink('');
+    setEditLinkText('');
   };
 
   const handleEdit = async (e: React.FormEvent, faq: FAQ) => {
     e.preventDefault();
     if (editQuestion && editAnswer && editingId) {
       try {
-        await updateFaq(editingId, { question: editQuestion, answer: editAnswer });
+        await updateFaq(editingId, { 
+          question: editQuestion, 
+          answer: editAnswer,
+          link: editLink || undefined,
+          linktext: editLinkText || undefined
+        });
         cancelEditing();
         loadFaqs();
       } catch (error) {
@@ -117,6 +137,20 @@ const FAQPage: React.FC = () => {
               className="w-full p-2 rounded bg-background-950 text-text-100 placeholder-text-300 border border-background-300 h-24"
               required
             />
+            <input
+              type="text"
+              value={newLink}
+              onChange={(e) => setNewLink(e.target.value)}
+              placeholder="Link URL (optional)"
+              className="w-full p-2 rounded bg-background-950 text-text-100 placeholder-text-300 border border-background-300"
+            />
+            <input
+              type="text"
+              value={newLinkText}
+              onChange={(e) => setNewLinkText(e.target.value)}
+              placeholder="Link Text (optional)"
+              className="w-full p-2 rounded bg-background-950 text-text-100 placeholder-text-300 border border-background-300"
+            />
             <div className="flex space-x-2">
               <button 
                 type="submit"
@@ -154,6 +188,20 @@ const FAQPage: React.FC = () => {
                   className="w-full p-2 rounded bg-background-950 text-text-100 placeholder-text-300 border border-background-300 h-24"
                   required
                 />
+                <input
+                  type="text"
+                  value={editLink}
+                  onChange={(e) => setEditLink(e.target.value)}
+                  placeholder="Link URL (optional)"
+                  className="w-full p-2 rounded bg-background-950 text-text-100 placeholder-text-300 border border-background-300"
+                />
+                <input
+                  type="text"
+                  value={editLinkText}
+                  onChange={(e) => setEditLinkText(e.target.value)}
+                  placeholder="Link Text (optional)"
+                  className="w-full p-2 rounded bg-background-950 text-text-100 placeholder-text-300 border border-background-300"
+                />
                 <div className="flex space-x-2">
                   <button 
                     type="submit"
@@ -186,8 +234,18 @@ const FAQPage: React.FC = () => {
                 {expandedQuestion === faq.id && (
                   <div className="p-6 bg-background-950">
                     <p className="text-text-300 whitespace-pre-line">{faq.answer}</p>
+                    {faq.link && faq.linktext && (
+                      <a 
+                        href={faq.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-block mt-3 text-primary-500 hover:text-primary-400 font-medium underline transition duration-200"
+                      >
+                        {faq.linktext} →
+                      </a>
+                    )}
                     {isAdmin && (
-                      <div className="flex space-x-2 mt-2">
+                      <div className="flex space-x-2 mt-4">
                         <button 
                           onClick={() => startEditing(faq)}
                           className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded"

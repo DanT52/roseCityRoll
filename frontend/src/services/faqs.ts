@@ -8,7 +8,14 @@ export const getFaqs = async () => {
   return await res.json();
 };
 
-export const createFaq = async (faq: { question: string; answer: string; }) => {
+export interface FAQCreateUpdate {
+  question: string;
+  answer: string;
+  link?: string;
+  linktext?: string;
+}
+
+export const createFaq = async (faq: FAQCreateUpdate) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('Not authenticated');
   const res = await fetch(BACKEND_URL + "/faqs/", {
@@ -25,7 +32,7 @@ export const createFaq = async (faq: { question: string; answer: string; }) => {
   return await res.json();
 };
 
-export const updateFaq = async (id: string, faq: { question: string; answer: string; }) => {
+export const updateFaq = async (id: string, faq: FAQCreateUpdate) => {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('Not authenticated');
   const res = await fetch(BACKEND_URL + `/faqs/${id}`, {

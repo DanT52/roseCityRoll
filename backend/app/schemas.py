@@ -71,6 +71,8 @@ class AnnouncementInDB(AnnouncementBase):
 class FAQBase(BaseModel):
     question: str
     answer: str
+    link: Optional[str] = None
+    linktext: Optional[str] = None
 
 class FAQCreate(FAQBase):
     pass

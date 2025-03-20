@@ -48,6 +48,8 @@ class FAQ(Base):
     id = Column(String, primary_key=True, index=True)
     question = Column(String, nullable=False)
     answer = Column(String, nullable=False)
+    link = Column(String, nullable=True)
+    linktext = Column(String, nullable=True)
 
 
 class Thanks(Base):

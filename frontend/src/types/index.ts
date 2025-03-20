@@ -27,6 +27,8 @@ export interface FAQ {
   id: string;
   question: string;
   answer: string;
+  link?: string;
+  linktext?: string;
 }
 
 export interface Thanks {
