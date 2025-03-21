@@ -59,3 +59,24 @@ class Thanks(Base):
     __tablename__ = "thanks"
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String, nullable=False, default="")
+
+
+class RouteSchedule(Base):
+    """
+    Route Schedule model for storing ride routes.
+    """
+    __tablename__ = "route_schedules"
+    
+    id = Column(String, primary_key=True, index=True)
+    day = Column(String, nullable=False)
+    date = Column(String, nullable=False)
+    meeting_point = Column(String, nullable=False)
+    end_point = Column(String, nullable=True)
+    start_time = Column(String, nullable=False)
+    end_time = Column(String, nullable=False)
+    route_description = Column(String, nullable=False)
+    difficulty = Column(String, nullable=False)
+    distance = Column(String, nullable=False)
+    leader = Column(String, nullable=False)
+    route_map_embed = Column(String, nullable=True)
+    start_point_embed = Column(String, nullable=True)

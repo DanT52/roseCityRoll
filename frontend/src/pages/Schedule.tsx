@@ -1,41 +1,66 @@
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronDown, ChevronUp, Plus, Edit, Trash, X } from 'lucide-react';
 import { DaySchedule } from '../types';
+import { getAllRoutes, createRoute, updateRoute, deleteRoute } from '../services/routes';
+import { useAuth } from '../contexts/AuthContext'; // Fixed import path
 
 const Schedule: React.FC = () => {
-  // Mock schedule data - in production, this would come from an API
-  const scheduleData: DaySchedule[] = [
-    {
-      id: '1',
-      day: 'Monday',
-      date: '2024-07-15',
-      meetingPoint: 'Waterfront Park',
-      endPoint: 'Caruthers St',
-      startTime: '6:00 PM',
-      endTime: '8:30 PM',
-      routeDescription: 'Scenic waterfront route with stunning views of the Willamette River',
-      difficulty: '🐰 Bunny',
-      distance: '8 miles',
-      leader: 'Sarah Johnson',
-      routeMapEmbed: 'https://www.google.com/maps/d/u/0/embed?mid=1E24IbewILQTX3EN860FOaXS6FneXjO0&ehbc=2E312F&noprof=1',
-      startPointEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6983.25940266418!2d-122.66319639999999!3d45.5057205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54950a7220d0431b%3A0xaf79100c3112b87d!2s324%20SE%20Caruthers%20St%2C%20Portland%2C%20OR%2097214!5e1!3m2!1sen!2sus!4v1740707631412!5m2!1sen!2sus',
-    },
-    {
-      id: '2',
-      day: 'Tuesday',
-      date: '2024-07-16',
-      meetingPoint: 'Laurelhurst Park',
-      startTime: '6:00 PM',
-      endTime: '9:00 PM',
-      routeDescription: 'East side exploration through quiet neighborhoods',
-      difficulty: '🔵 Blue',
-      distance: '12 miles',
-      leader: 'Mike Wilson',
-    },
-  ];
-
+  const [scheduleData, setScheduleData] = useState<DaySchedule[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Record<string, string>>({});
+  
+  // Admin state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingRoute, setEditingRoute] = useState<Partial<DaySchedule> | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  
+  // Use the existing AuthContext or check for token directly
+  const { isLoggedIn } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Check if user is authorized on component mount
+  useEffect(() => {
+    // Use the context's isLoggedIn property
+    setIsAdmin(isLoggedIn);
+    
+    // Alternative: Check for token directly if you prefer not to use context
+    // const token = localStorage.getItem('token');
+    // setIsAdmin(!!token);
+  }, [isLoggedIn]);
+
+  // Fetch schedule data
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      try {
+        setLoading(true);
+        const routes = await getAllRoutes();
+        
+        // Sort routes by date and then by start time
+        const sortedRoutes = [...routes].sort((a, b) => {
+          // First compare by date
+          const dateComparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+          if (dateComparison !== 0) return dateComparison;
+          
+          // If same date, compare by start time
+          // Convert time strings to comparable format (assuming format like "6:00 PM")
+          const timeA = new Date(`01/01/2000 ${a.startTime}`).getTime();
+          const timeB = new Date(`01/01/2000 ${b.startTime}`).getTime();
+          return timeA - timeB;
+        });
+        
+        setScheduleData(sortedRoutes);
+      } catch (err) {
+        setError('Failed to load schedule data');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchRoutes();
+  }, []);
 
   const toggleDay = (id: string) => {
     setExpandedDay(expandedDay === id ? null : id);
@@ -48,147 +73,439 @@ const Schedule: React.FC = () => {
   const handleTabChange = (dayId: string, tab: string) => {
     setActiveTab(prev => ({...prev, [dayId]: tab}));
   };
+  
+  const handleAddRoute = async () => {
+    if (!editingRoute) return;
+    
+    try {
+      const newRoute = await createRoute(editingRoute as Omit<DaySchedule, 'id'>);
+      setScheduleData([...scheduleData, newRoute]);
+      setShowForm(false);
+      setEditingRoute(null);
+    } catch (err) {
+      setError('Failed to create route');
+      console.error(err);
+    }
+  };
+  
+  const handleUpdateRoute = async () => {
+    if (!editingRoute || !editingRoute.id) return;
+    
+    try {
+      const updatedRoute = await updateRoute(
+        editingRoute.id, 
+        editingRoute as Omit<DaySchedule, 'id'>
+      );
+      
+      setScheduleData(scheduleData.map(route => 
+        route.id === updatedRoute.id ? updatedRoute : route
+      ));
+      
+      setIsEditing(false);
+      setEditingRoute(null);
+    } catch (err) {
+      setError('Failed to update route');
+      console.error(err);
+    }
+  };
+  
+  const handleDeleteRoute = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this route?')) return;
+    
+    try {
+      await deleteRoute(id);
+      setScheduleData(scheduleData.filter(route => route.id !== id));
+    } catch (err) {
+      setError('Failed to delete route');
+      console.error(err);
+    }
+  };
+  
+  const startEdit = (route: DaySchedule) => {
+    setIsEditing(true);
+    setEditingRoute({...route});
+    setShowForm(true);
+  };
+  
+  const cancelEdit = () => {
+    setIsEditing(false);
+    setEditingRoute(null);
+    setShowForm(false);
+  };
+  
+  const handleNewRoute = () => {
+    setIsEditing(false);
+    setEditingRoute({
+      day: '',
+      date: '',
+      meetingPoint: '',
+      startTime: '',
+      endTime: '',
+      routeDescription: '',
+      difficulty: '🐰 Bunny',
+      distance: '',
+      leader: '',
+    });
+    setShowForm(true);
+  };
+
+  if (loading) return <div className="text-center py-8">Loading schedule...</div>;
+  if (error) return <div className="text-center py-8 text-red-500">{error}</div>;
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="font-heading text-4xl mb-8 text-text-100">Event Schedule</h1>
-      
-      <div className="space-y-4">
-        {scheduleData.map((day) => (
-          <div 
-            key={day.id}
-            className="border border-background-300 rounded-lg overflow-hidden"
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="font-heading text-4xl text-text-100">Event Schedule</h1>
+        
+        {isAdmin && (
+          <button
+            onClick={handleNewRoute}
+            className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
           >
-            <button
-              className="w-full flex justify-between items-center p-4 bg-background-800 text-text-100 hover:bg-background-700"
-              onClick={() => toggleDay(day.id)}
-            >
-              <div className="flex items-center">
-                <span className="font-heading text-xl">{day.day}</span>
-                <span className="ml-4 text-text-400">{new Date(day.date).toLocaleDateString()}</span>
-              </div>
-              {expandedDay === day.id ? (
-                <ChevronUp className="w-6 h-6" />
-              ) : (
-                <ChevronDown className="w-6 h-6" />
-              )}
+            <Plus size={18} />
+            Add New Route
+          </button>
+        )}
+      </div>
+      
+      {/* Route Edit/Create Form */}
+      {showForm && (
+        <div className="bg-background-900 border border-background-700 rounded-lg p-6 mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-heading text-2xl text-text-100">
+              {isEditing ? 'Edit Route' : 'Add New Route'}
+            </h2>
+            <button onClick={cancelEdit} className="text-text-400 hover:text-text-100">
+              <X size={24} />
             </button>
-            
-            {expandedDay === day.id && (
-              <div className="bg-background-950">
-                {/* Tabs for navigation - Redesigned to look more clickable */}
-                <div className="flex border-b border-background-700 px-2 pt-2 gap-2">
-                  <button 
-                    className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
-                      ${activeTab[day.id] === 'details' 
-                        ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
-                        : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
-                    onClick={() => handleTabChange(day.id, 'details')}
-                  >
-                    Details
-                  </button>
-                  
-                  {day.startPointEmbed && (
-                    <button 
-                      className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
-                        ${activeTab[day.id] === 'start' 
-                          ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
-                          : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
-                      onClick={() => handleTabChange(day.id, 'start')}
-                    >
-                      Meeting Point
-                    </button>
-                  )}
-                  
-                  {day.routeMapEmbed && (
-                    <button 
-                      className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
-                        ${activeTab[day.id] === 'route' 
-                          ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
-                          : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
-                      onClick={() => handleTabChange(day.id, 'route')}
-                    >
-                      Route Map
-                    </button>
-                  )}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">Day Label</label>
+                <input
+                  type="text"
+                  value={editingRoute?.day || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, day: e.target.value})}
+                  placeholder="e.g. Monday, Sunday Morning, etc."
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                />
+                <p className="text-xs text-text-400 mt-1">Custom label like "Sunday Morning" or "Monday Evening"</p>
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">Date</label>
+                <input
+                  type="date"
+                  value={editingRoute?.date || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, date: e.target.value})}
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">Meeting Point</label>
+                <input
+                  type="text"
+                  value={editingRoute?.meetingPoint || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, meetingPoint: e.target.value})}
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">End Point (Optional)</label>
+                <input
+                  type="text"
+                  value={editingRoute?.endPoint || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, endPoint: e.target.value})}
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-text-300 mb-1">Start Time</label>
+                  <input
+                    type="text"
+                    value={editingRoute?.startTime || ''}
+                    onChange={(e) => setEditingRoute({...editingRoute, startTime: e.target.value})}
+                    placeholder="e.g. 6:00 PM"
+                    className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                  />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-text-300 mb-1">End Time</label>
+                  <input
+                    type="text"
+                    value={editingRoute?.endTime || ''}
+                    onChange={(e) => setEditingRoute({...editingRoute, endTime: e.target.value})}
+                    placeholder="e.g. 8:30 PM"
+                    className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">Route Description</label>
+                <textarea
+                  value={editingRoute?.routeDescription || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, routeDescription: e.target.value})}
+                  rows={3}
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                ></textarea>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-text-300 mb-1">Difficulty</label>
+                  <select
+                    value={editingRoute?.difficulty || '🐰 Bunny'}
+                    onChange={(e) => setEditingRoute({
+                      ...editingRoute,
+                      difficulty: e.target.value as DaySchedule['difficulty']
+                    })}
+                    className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                  >
+                    <option value="🐰 Bunny">🐰 Bunny</option>
+                    <option value="🟢 Green">🟢 Green</option>
+                    <option value="🔵 Blue">🔵 Blue</option>
+                    <option value="⚫ Black">⚫ Black</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-text-300 mb-1">Distance</label>
+                  <input
+                    type="text"
+                    value={editingRoute?.distance || ''}
+                    onChange={(e) => setEditingRoute({...editingRoute, distance: e.target.value})}
+                    placeholder="e.g. 8 miles"
+                    className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                  />
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">Route Leader</label>
+                <input
+                  type="text"
+                  value={editingRoute?.leader || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, leader: e.target.value})}
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">Route Map Embed URL (Optional)</label>
+                <input
+                  type="text"
+                  value={editingRoute?.routeMapEmbed || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, routeMapEmbed: e.target.value})}
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                />
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-300 mb-1">Start Point Map Embed URL (Optional)</label>
+                <input
+                  type="text"
+                  value={editingRoute?.startPointEmbed || ''}
+                  onChange={(e) => setEditingRoute({...editingRoute, startPointEmbed: e.target.value})}
+                  className="w-full bg-background-800 border border-background-600 rounded-md px-3 py-2 text-text-100"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-3 mt-4">
+            <button 
+              onClick={cancelEdit}
+              className="px-4 py-2 border border-background-600 rounded-md text-text-300 hover:bg-background-800"
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={isEditing ? handleUpdateRoute : handleAddRoute}
+              className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md"
+              disabled={!editingRoute?.day || !editingRoute?.date}
+            >
+              {isEditing ? 'Save Changes' : 'Add Route'}
+            </button>
+          </div>
+        </div>
+      )}
+      
+      {/* Schedule List */}
+      <div className="space-y-4">
+        {scheduleData.length === 0 ? (
+          <p className="text-center text-text-300 py-8">No scheduled routes available.</p>
+        ) : (
+          scheduleData.map((day) => (
+            <div 
+              key={day.id}
+              className="border border-background-300 rounded-lg overflow-hidden"
+            >
+              <div className="flex items-center justify-between">
+                <button
+                  className="flex-grow flex justify-between items-center p-4 bg-background-800 text-text-100 hover:bg-background-700"
+                  onClick={() => toggleDay(day.id)}
+                >
+                  <div className="flex items-center">
+                    <span className="font-heading text-xl">{day.day}</span>
+                    <span className="ml-4 text-text-400">{new Date(day.date).toLocaleDateString()}</span>
+                  </div>
+                  {expandedDay === day.id ? (
+                    <ChevronUp className="w-6 h-6" />
+                  ) : (
+                    <ChevronDown className="w-6 h-6" />
+                  )}
+                </button>
                 
-                {/* Tab content */}
-                <div className="p-6">
-                  {activeTab[day.id] === 'details' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h3 className="font-heading text-lg mb-2 text-text-200">Meeting Point</h3>
-                        <p className="text-text-300">{day.meetingPoint} @ {day.startTime}</p>
+                {isAdmin && (
+                  <div className="flex p-2 bg-background-800">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startEdit(day);
+                      }}
+                      className="p-2 text-text-300 hover:text-primary-400"
+                      title="Edit Route"
+                    >
+                      <Edit size={18} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        handleDeleteRoute(day.id);
+                      }}
+                      className="p-2 text-text-300 hover:text-red-500"
+                      title="Delete Route"
+                    >
+                      <Trash size={18} />
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {expandedDay === day.id && (
+                <div className="bg-background-950">
+                  {/* Tabs for navigation - Redesigned to look more clickable */}
+                  <div className="flex border-b border-background-700 px-2 pt-2 gap-2">
+                    <button 
+                      className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
+                        ${activeTab[day.id] === 'details' 
+                          ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
+                          : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
+                      onClick={() => handleTabChange(day.id, 'details')}
+                    >
+                      Details
+                    </button>
+                    
+                    {day.startPointEmbed && (
+                      <button 
+                        className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
+                          ${activeTab[day.id] === 'start' 
+                            ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
+                            : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
+                        onClick={() => handleTabChange(day.id, 'start')}
+                      >
+                        Meeting Point
+                      </button>
+                    )}
+                    
+                    {day.routeMapEmbed && (
+                      <button 
+                        className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
+                          ${activeTab[day.id] === 'route' 
+                            ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
+                            : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
+                        onClick={() => handleTabChange(day.id, 'route')}
+                      >
+                        Route Map
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Tab content */}
+                  <div className="p-6">
+                    {activeTab[day.id] === 'details' && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <h3 className="font-heading text-lg mb-2 text-text-200">Meeting Point</h3>
+                          <p className="text-text-300">{day.meetingPoint} @ {day.startTime}</p>
+                          
+                          {day.endPoint && (
+                            <>
+                              <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">End Point</h3>
+                              <p className="text-text-300">{day.endPoint} @ {day.endTime}</p>
+                            </>
+                          )}
+                          
+                          <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">Route Leader</h3>
+                          <p className="text-text-300">{day.leader}</p>
+                        </div>
                         
-                        {day.endPoint && (
-                          <>
-                            <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">End Point</h3>
-                            <p className="text-text-300">{day.endPoint} @ {day.endTime}</p>
-                          </>
-                        )}
-                        
-                        <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">Route Leader</h3>
-                        <p className="text-text-300">{day.leader}</p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="font-heading text-lg mb-2 text-text-200">Route Details</h3>
-                        <p className="text-text-300 mb-4">{day.routeDescription}</p>
-                        
-                        <div className="flex items-center space-x-6 mt-4">
-                          <div className="bg-background-900 p-3 rounded-md flex-grow">
-                            <span className="text-sm font-medium text-text-400 block mb-1">Difficulty</span>
-                            <p className="text-text-200 text-lg font-medium">{day.difficulty}</p>
-                          </div>
-                          <div className="bg-background-900 p-3 rounded-md flex-grow">
-                            <span className="text-sm font-medium text-text-400 block mb-1">Distance</span>
-                            <p className="text-text-200 text-lg font-medium">{day.distance}</p>
+                        <div>
+                          <h3 className="font-heading text-lg mb-2 text-text-200">Route Details</h3>
+                          <p className="text-text-300 mb-4">{day.routeDescription}</p>
+                          
+                          <div className="flex items-center space-x-6 mt-4">
+                            <div className="bg-background-900 p-3 rounded-md flex-grow">
+                              <span className="text-sm font-medium text-text-400 block mb-1">Difficulty</span>
+                              <p className="text-text-200 text-lg font-medium">{day.difficulty}</p>
+                            </div>
+                            <div className="bg-background-900 p-3 rounded-md flex-grow">
+                              <span className="text-sm font-medium text-text-400 block mb-1">Distance</span>
+                              <p className="text-text-200 text-lg font-medium">{day.distance}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {activeTab[day.id] === 'route' && day.routeMapEmbed && (
-                    <div className="flex justify-center">
-                      <div className="w-full max-w-3xl aspect-video">
-                        <iframe 
-                          src={day.routeMapEmbed} 
-                          width="100%" 
-                          height="100%" 
-                          style={{ border: 0 }} 
-                          allowFullScreen 
-                          loading="lazy"
-                          title={`Route map for ${day.day}'s ride`}
-                          className="rounded shadow-lg"
-                        ></iframe>
+                    )}
+                    
+                    {activeTab[day.id] === 'route' && day.routeMapEmbed && (
+                      <div className="flex justify-center">
+                        <div className="w-full max-w-3xl aspect-video">
+                          <iframe 
+                            src={day.routeMapEmbed} 
+                            width="100%" 
+                            height="100%" 
+                            style={{ border: 0 }} 
+                            allowFullScreen 
+                            loading="lazy"
+                            title={`Route map for ${day.day}'s ride`}
+                            className="rounded shadow-lg"
+                          ></iframe>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {activeTab[day.id] === 'start' && day.startPointEmbed && (
-                    <div className="flex justify-center">
-                      <div className="w-full max-w-3xl aspect-video">
-                        <iframe 
-                          src={day.startPointEmbed} 
-                          width="100%" 
-                          height="100%" 
-                          style={{ border: 0 }} 
-                          allowFullScreen 
-                          loading="lazy"
-                          referrerPolicy="no-referrer-when-downgrade"
-                          title={`Meeting point for ${day.day}'s ride`}
-                          className="rounded shadow-lg"
-                        ></iframe>
+                    )}
+                    
+                    {activeTab[day.id] === 'start' && day.startPointEmbed && (
+                      <div className="flex justify-center">
+                        <div className="w-full max-w-3xl aspect-video">
+                          <iframe 
+                            src={day.startPointEmbed} 
+                            width="100%" 
+                            height="100%" 
+                            style={{ border: 0 }} 
+                            allowFullScreen 
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title={`Meeting point for ${day.day}'s ride`}
+                            className="rounded shadow-lg"
+                          ></iframe>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
