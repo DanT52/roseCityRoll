@@ -93,7 +93,7 @@ async def initialize_thanks():
         result = await session.execute(select(Thanks))
         thanks_obj = result.scalar_one_or_none()
         if thanks_obj is None:
-            new_thanks = Thanks(content="")
+            new_thanks = Thanks(content="# example")
             session.add(new_thanks)
             await session.commit()
 
