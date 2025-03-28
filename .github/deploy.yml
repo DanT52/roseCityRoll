@@ -1,0 +1,48 @@
+name: Deploy to AWS Lightsail
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+
+      - name: Deploy to Lightsail
+        run: |
+          # Navigate to your project directory
+          cd ${{ secrets.PROJECT_PATH }}
+
+          # Pull the latest changes
+          git pull origin main
+
+          # Rebuild
+          docker compose build
+          docker-compose up -d
+        env:
+          # In case you need additional environment variables
+          LIGHTSAIL_HOST: ${{ secrets.LIGHTSAIL_HOST }}
+        # Use the SSH action to run the script remotely
+        shell: bash
+
+      - name: Run Remote Deployment Script
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            git pull origin main
+            docker-compose down
+            docker-compose up -d --build
