@@ -167,6 +167,11 @@ const Schedule: React.FC = () => {
           </button>
         )}
       </div>
+      <div className="bg-background-800 p-6 rounded-lg mb-8">
+        <p className="text-text-200">
+          Routes and details for each skate are currently being decided. Please check back later for more information about meeting points, difficulty ratings, and route details.
+        </p>
+      </div>
       
       {/* Route Edit/Create Form */}
       {showForm && (
