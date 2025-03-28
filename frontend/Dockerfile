@@ -1,6 +1,9 @@
 # Stage 1: Build the React Vite project
 FROM node:18-alpine AS build
 
+ARG VITE_REACT_APP_BACKEND_URL
+ENV VITE_REACT_APP_BACKEND_URL=${VITE_REACT_APP_BACKEND_URL}
+
 WORKDIR /app
 
 # Copy package.json and package-lock.json

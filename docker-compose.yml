@@ -3,6 +3,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_REACT_APP_BACKEND_URL: ${VITE_REACT_APP_BACKEND_URL}
     container_name: frontend_container
     ports:
       - "80:80"         # Nginx
@@ -27,6 +29,7 @@ services:
   db:
     image: postgres:15
     container_name: postgres_db
+    restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
