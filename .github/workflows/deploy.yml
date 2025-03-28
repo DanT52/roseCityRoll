@@ -18,25 +18,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
 
-      - name: Deploy to Lightsail
-        run: |
-          # Navigate to your project directory
-          echo "Project path: ${{ secrets.PROJECT_PATH }}"
-          ls -a
-          cd ${{ secrets.PROJECT_PATH }}
-
-          # Pull the latest changes
-          git pull origin main
-
-          # Rebuild
-          docker compose build
-          docker-compose up -d
-        env:
-          # In case you need additional environment variables
-          LIGHTSAIL_HOST: ${{ secrets.LIGHTSAIL_HOST }}
-        # Use the SSH action to run the script remotely
-        shell: bash
-
       - name: Run Remote Deployment Script
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -46,5 +27,5 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
-            docker-compose down
-            docker-compose up -d --build
+            docker compose build
+            docker compose up -d
