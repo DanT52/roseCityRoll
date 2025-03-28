@@ -21,6 +21,8 @@ jobs:
       - name: Deploy to Lightsail
         run: |
           # Navigate to your project directory
+          echo "Project path: ${{ secrets.PROJECT_PATH }}"
+          ls -a
           cd ${{ secrets.PROJECT_PATH }}
 
           # Pull the latest changes
