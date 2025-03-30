@@ -12,7 +12,7 @@ const Home: React.FC = () => {
       id: '1',
       title: 'Accommodations / Lodging',
       content: 'You can now start reserving your rooms at NW Portland Hostel if you are traveling for the event.',
-      date: '02/20/2024, 12:00 PM',
+      date: '02/20/2025, 12:00 PM',
       link: {
         text: 'Watch Announcement Video',
         url: 'https://www.instagram.com/p/DGTbpafyOtr/'
