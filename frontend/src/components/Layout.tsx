@@ -41,7 +41,7 @@ const Layout: React.FC = () => {
           <nav className="container mx-auto px-4 py-4">
             <div className="flex justify-between items-center">
               <Link to="/" className="font-heading text-2xl text-text-100 flex items-center">
-                Big Rose City Roll
+                Big Rose City Roll 2025
                 <img src={roseCityIcon} alt="Rose City Icon" className="ml-2 w-12 h-12" />
               </Link>
               
