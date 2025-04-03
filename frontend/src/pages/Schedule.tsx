@@ -149,6 +149,53 @@ const Schedule: React.FC = () => {
     setShowForm(true);
   };
 
+  // Add effect to load Strava embed script when needed
+  useEffect(() => {
+    // Check if we have any expanded days with route maps and the script isn't already loaded
+    if (expandedDay && 
+        scheduleData.some(day => day.id === expandedDay && day.routeMapEmbed && day.routeMapEmbed.includes('strava-embed')) &&
+        activeTab[expandedDay] === 'route' &&
+        !document.querySelector('script[src="https://strava-embeds.com/embed.js"]')) {
+      
+      const script = document.createElement('script');
+      script.src = 'https://strava-embeds.com/embed.js';
+      script.async = true;
+      document.body.appendChild(script);
+      
+      return () => {
+        // Optional: Clean up script when component unmounts if desired
+        // document.body.removeChild(script);
+      };
+    }
+  }, [expandedDay, activeTab, scheduleData]);
+
+  // Modify the Strava embed effect to handle the script loading more robustly
+  useEffect(() => {
+    // Only run if we have expanded days with Strava embeds that are visible
+    if (expandedDay && 
+        scheduleData.some(day => day.id === expandedDay && 
+        day.routeMapEmbed && 
+        day.routeMapEmbed.includes('strava-embed-placeholder')) &&
+        activeTab[expandedDay] === 'route') {
+      
+      // Remove any existing script to avoid duplicates
+      const existingScript = document.querySelector('script[src="https://strava-embeds.com/embed.js"]');
+      if (existingScript) {
+        existingScript.remove();
+      }
+      
+      // Create and append a new script
+      const script = document.createElement('script');
+      script.src = 'https://strava-embeds.com/embed.js';
+      script.async = true;
+      document.body.appendChild(script);
+      
+      return () => {
+        // Optional cleanup if needed
+      };
+    }
+  }, [expandedDay, activeTab, scheduleData]);
+
   if (loading) return <div className="text-center py-8">Loading schedule...</div>;
   if (error) return <div className="text-center py-8 text-red-500">{error}</div>;
 
@@ -169,7 +216,7 @@ const Schedule: React.FC = () => {
       </div>
       <div className="bg-background-800 p-6 rounded-lg mb-8">
         <p className="text-text-200">
-          Routes and details for each skate are currently being decided. Please check back later for more information about meeting points, difficulty ratings, and route details.
+          Routes for each skate are currently being worked on. Please check back later for more complete information.
         </p>
       </div>
       
@@ -304,7 +351,7 @@ const Schedule: React.FC = () => {
               </div>
               
               <div className="mb-4">
-                <label className="block text-sm font-medium text-text-300 mb-1">Route Map Embed URL (Optional)</label>
+                <label className="block text-sm font-medium text-text-300 mb-1">Full Strava Embed (Optional)</label>
                 <input
                   type="text"
                   value={editingRoute?.routeMapEmbed || ''}
@@ -454,7 +501,7 @@ const Schedule: React.FC = () => {
                         </div>
                         
                         <div>
-                          <h3 className="font-heading text-lg mb-2 text-text-200">Route Details</h3>
+                          <h3 className="font-heading text-lg mb-2 text-text-200">Details</h3>
                           <p className="text-text-300 mb-4">{day.routeDescription}</p>
                           
                           <div className="flex items-center space-x-6 mt-4">
@@ -473,17 +520,37 @@ const Schedule: React.FC = () => {
                     
                     {activeTab[day.id] === 'route' && day.routeMapEmbed && (
                       <div className="flex justify-center">
-                        <div className="w-full max-w-3xl aspect-video">
-                          <iframe 
-                            src={day.routeMapEmbed} 
-                            width="100%" 
-                            height="100%" 
-                            style={{ border: 0 }} 
-                            allowFullScreen 
-                            loading="lazy"
-                            title={`Route map for ${day.day}'s ride`}
-                            className="rounded shadow-lg"
-                          ></iframe>
+                        <div className="w-full max-w-3xl">
+                          {/* 
+                            For Strava embeds, we need to:
+                            1. Extract just the div part from the full embed code
+                            2. Inject it without the script tag (which we load separately)
+                          */}
+                          {day.routeMapEmbed.includes('strava-embed-placeholder') ? (
+                            <>
+                              <div 
+                                dangerouslySetInnerHTML={{ 
+                                  __html: day.routeMapEmbed.split('<script')[0] // Get just the div part
+                                }}
+                                className="flex items-center justify-center"
+                              />
+                              <p className="text-center text-sm text-text-400 mt-2">
+                                If the map doesn't appear, please give it a moment to load.
+                              </p>
+                            </>
+                          ) : (
+                            // Fallback for other embed types (like direct iframes)
+                            <iframe 
+                              src={day.routeMapEmbed} 
+                              width="100%" 
+                              height="400" 
+                              style={{ border: 0 }} 
+                              allowFullScreen 
+                              loading="lazy"
+                              title={`Route map for ${day.day}'s ride`}
+                              className="rounded shadow-lg"
+                            ></iframe>
+                          )}
                         </div>
                       </div>
                     )}
@@ -492,10 +559,10 @@ const Schedule: React.FC = () => {
                       <div className="flex justify-center">
                         <div className="w-full max-w-3xl aspect-video">
                           <iframe 
-                            src={day.startPointEmbed} 
-                            width="100%" 
-                            height="100%" 
-                            style={{ border: 0 }} 
+                            src={day.startPointEmbed}
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
                             allowFullScreen 
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
