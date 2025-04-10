@@ -7,7 +7,7 @@ services:
         VITE_REACT_APP_BACKEND_URL: ${VITE_REACT_APP_BACKEND_URL}
     container_name: frontend_container
     ports:
-      - "80:80"         # Nginx
+      - "3000:80"         # Nginx
     environment:
       VITE_REACT_APP_BACKEND_URL: ${VITE_REACT_APP_BACKEND_URL}
     depends_on:
