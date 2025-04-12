@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Schedule from './pages/Schedule';
@@ -10,10 +10,25 @@ import Login from './pages/Login';
 import AdminDash from './pages/AdminDash';
 import ProtectedRoute from './components/ProtectedRoute';
 
+// Google Analytics tracking function
+function usePageTracking() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('config', 'G-4K2ENH6D1P', {
+        page_path: location.pathname,
+      });
+    }
+  }, [location]);
+}
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* Call usePageTracking inside BrowserRouter */}
+        <PageTracker />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -34,6 +49,12 @@ function App() {
       </BrowserRouter>
     </AuthProvider>
   );
+}
+
+// Separate component to handle page tracking
+function PageTracker() {
+  usePageTracking();
+  return null;
 }
 
 export default App;
