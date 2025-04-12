@@ -9,6 +9,7 @@ import Thanks from './pages/Thanks';
 import Login from './pages/Login';
 import AdminDash from './pages/AdminDash';
 import ProtectedRoute from './components/ProtectedRoute';
+import NotFound from './pages/NotFound'; // Import the 404 page component
 
 // Google Analytics tracking function
 function usePageTracking() {
@@ -44,6 +45,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<NotFound />} /> {/* Add 404 route */}
           </Route>
         </Routes>
       </BrowserRouter>
