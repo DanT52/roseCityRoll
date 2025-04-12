@@ -125,13 +125,13 @@ const Announcements: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 p-4">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 md:space-y-8 p-2 md:p-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <h2 className="font-heading text-2xl text-white">Announcements</h2>
         {isAdmin && !showForm && (
           <button 
             onClick={() => setShowForm(true)} 
-            className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg"
+            className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg w-full sm:w-auto"
           >
             New Announcement
           </button>
@@ -139,9 +139,9 @@ const Announcements: React.FC = () => {
       </div>
       
       {isAdmin && showForm && (
-        <form onSubmit={handleCreate} className="bg-accent-50 rounded p-4 mb-8">
-          <h3 className="font-heading text-xl mb-4 text-white">New Announcement</h3>
-          <div className="space-y-4">
+        <form onSubmit={handleCreate} className="bg-accent-50 rounded p-3 md:p-4 mb-6 md:mb-8">
+          <h3 className="font-heading text-xl mb-3 md:mb-4 text-white">New Announcement</h3>
+          <div className="space-y-3 md:space-y-4">
             <div>
               <input
                 type="text"
@@ -179,7 +179,7 @@ const Announcements: React.FC = () => {
                 className="w-full p-2 rounded bg-accent-100 text-accent-900 placeholder-accent-600"
               />
             </div>
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <button 
                 type="submit"
                 className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg"
@@ -198,11 +198,11 @@ const Announcements: React.FC = () => {
         </form>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {announcements.map((announcement) => (
-          <div key={announcement.id} className="bg-accent-50 rounded p-4">
+          <div key={announcement.id} className="bg-accent-50 rounded p-3 md:p-4">
             {editingId === Number(announcement.id) ? (
-              <form onSubmit={(e) => handleEdit(e, announcement)} className="space-y-4">
+              <form onSubmit={(e) => handleEdit(e, announcement)} className="space-y-3 md:space-y-4">
                 <div>
                   <input
                     type="text"
@@ -247,7 +247,7 @@ const Announcements: React.FC = () => {
                     className="w-full p-2 rounded bg-accent-100 text-accent-900"
                   />
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-col xs:flex-row gap-2">
                   <button 
                     type="submit"
                     className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded"
@@ -266,22 +266,22 @@ const Announcements: React.FC = () => {
             ) : (
               <>
                 <h3 className="font-heading text-xl mb-2 text-white">{announcement.title}</h3>
-                <p className="text-accent-800 mb-2">{announcement.subtext}</p>
+                <p className="text-accent-800 mb-2 whitespace-pre-wrap">{announcement.subtext}</p>
                 {announcement.link && announcement.linktext && (
                   <div className="mb-2">
                     <a 
                       href={announcement.link} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="inline-flex items-center text-primary-500 hover:text-primary-600 font-medium"
+                      className="inline-flex items-center text-primary-500 hover:text-primary-600 font-medium break-words"
                     >
-                      {announcement.linktext} <ExternalLink className="ml-1 w-4 h-4" />
+                      {announcement.linktext} <ExternalLink className="ml-1 min-w-4 h-4 flex-shrink-0" />
                     </a>
                   </div>
                 )}
                 <p className="text-sm text-accent-600">{formatDate(announcement.published_at)}</p>
                 {isAdmin && (
-                  <div className="flex space-x-2 mt-2">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     <button 
                       onClick={() => startEditing(announcement)} 
                       className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded"
