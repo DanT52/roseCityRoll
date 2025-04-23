@@ -103,6 +103,7 @@ const Schedule: React.FC = () => {
       
       setIsEditing(false);
       setEditingRoute(null);
+      setShowForm(false);
     } catch (err) {
       setError('Failed to update route');
       console.error(err);
@@ -216,7 +217,7 @@ const Schedule: React.FC = () => {
       </div>
       <div className="bg-background-800 p-6 rounded-lg mb-8">
         <p className="text-text-200">
-          Routes for each skate are currently being worked on. Please check back later for more complete information.
+          Routes for each skate are still being worked on. Please check back later for more complete information.
         </p>
       </div>
       
@@ -407,7 +408,18 @@ const Schedule: React.FC = () => {
                 >
                   <div className="flex items-center">
                     <span className="font-heading text-xl">{day.day}</span>
-                    <span className="ml-4 text-text-400">{new Date(day.date).toLocaleDateString()}</span>
+                    <span className="ml-4 text-text-400">
+                    {
+                      (() => {
+                        // Parse as local date to avoid timezone issues
+                        const [year, month, dayNum] = day.date.split('-').map(Number);
+                        if (year && month && dayNum) {
+                          return new Date(year, month - 1, dayNum).toLocaleDateString();
+                        }
+                        return day.date;
+                      })()
+                    }
+                  </span>
                   </div>
                   {expandedDay === day.id ? (
                     <ChevronUp className="w-6 h-6" />
@@ -456,18 +468,6 @@ const Schedule: React.FC = () => {
                       Details
                     </button>
                     
-                    {day.startPointEmbed && (
-                      <button 
-                        className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
-                          ${activeTab[day.id] === 'start' 
-                            ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
-                            : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
-                        onClick={() => handleTabChange(day.id, 'start')}
-                      >
-                        Meeting Point
-                      </button>
-                    )}
-                    
                     {day.routeMapEmbed && (
                       <button 
                         className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
@@ -479,6 +479,18 @@ const Schedule: React.FC = () => {
                         Route Map
                       </button>
                     )}
+                    
+                    {day.startPointEmbed && (
+                      <button 
+                        className={`px-4 py-2 rounded-t-lg transition-all duration-200 font-medium
+                          ${activeTab[day.id] === 'start' 
+                            ? 'bg-background-800 text-primary-400 border-2 border-b-0 border-primary-400 shadow-md' 
+                            : 'text-text-300 hover:bg-background-900 hover:text-primary-300'}`}
+                        onClick={() => handleTabChange(day.id, 'start')}
+                      >
+                        Meeting Point
+                      </button>
+                    )}
                   </div>
                   
                   {/* Tab content */}
@@ -487,17 +499,25 @@ const Schedule: React.FC = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <h3 className="font-heading text-lg mb-2 text-text-200">Meeting Point</h3>
-                          <p className="text-text-300">{day.meetingPoint} @ {day.startTime}</p>
-                          
-                          {day.endPoint && (
+                          <p className="text-text-300">
+                            {day.meetingPoint}
+                            {day.startTime ? ` @ ${day.startTime}` : ''}
+                          </p>
+
+                          {/* End Point: default to meetingPoint if not provided */}
+                          <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">End Point</h3>
+                          <p className="text-text-300">
+                            {(day.endPoint || day.meetingPoint) /* default to meetingPoint */}
+                            {day.endTime ? ` @ ${day.endTime}` : ''}
+                          </p>
+
+                          {/* Only show Route Leader if present */}
+                          {day.leader && (
                             <>
-                              <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">End Point</h3>
-                              <p className="text-text-300">{day.endPoint} @ {day.endTime}</p>
+                              <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">Route Leader</h3>
+                              <p className="text-text-300">{day.leader}</p>
                             </>
                           )}
-                          
-                          <h3 className="font-heading text-lg mt-4 mb-2 text-text-200">Route Leader</h3>
-                          <p className="text-text-300">{day.leader}</p>
                         </div>
                         
                         <div>
@@ -509,10 +529,13 @@ const Schedule: React.FC = () => {
                               <span className="text-sm font-medium text-text-400 block mb-1">Difficulty</span>
                               <p className="text-text-200 text-lg font-medium">{day.difficulty}</p>
                             </div>
-                            <div className="bg-background-900 p-3 rounded-md flex-grow">
-                              <span className="text-sm font-medium text-text-400 block mb-1">Distance</span>
-                              <p className="text-text-200 text-lg font-medium">{day.distance}</p>
-                            </div>
+                            {/* Only show Distance if present */}
+                            {day.distance && (
+                              <div className="bg-background-900 p-3 rounded-md flex-grow">
+                                <span className="text-sm font-medium text-text-400 block mb-1">Distance</span>
+                                <p className="text-text-200 text-lg font-medium">{day.distance}</p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
