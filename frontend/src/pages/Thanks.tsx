@@ -49,7 +49,7 @@ const Thanks: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto py-8">
       {isAdmin && !isEditing && (
         <div className="mb-4">
           <button 
@@ -120,6 +120,19 @@ const Thanks: React.FC = () => {
           </ReactMarkdown>
         )
       )}
+      
+      {/* Hosted by section - moved to bottom */}
+      <div className="mt-16 text-center">
+        <p className="text-text-200 text-lg mb-4">Hosted by</p>
+        <div className="flex justify-center gap-6">
+          <a href="https://www.instagram.com/lallaveallen_/" target="_blank" rel="noopener noreferrer">
+            <img src="https://i.imgur.com/JOvfQIj.png" alt="La Llave Allen" className="h-16" />
+          </a>
+          <a href="https://www.instagram.com/bridge.city.skate/" target="_blank" rel="noopener noreferrer">
+            <img src="https://i.imgur.com/Fa2qHe3.png" alt="Bridge City Skate" className="h-16" />
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
