@@ -11,13 +11,11 @@ const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLoggedIn, logout } = useAuth();
   const { features } = useFeatures();
-  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
   };
 
   const renderLink = (to: string, label: string) => {
