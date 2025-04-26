@@ -6,13 +6,12 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 import { Announcement } from '../types';
 import { getLatestAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement } from '../services/announcements';
-
-// Import the ExternalLink icon from lucide-react
+import { useAuth } from '../contexts/AuthContext';
 import { ExternalLink } from 'lucide-react';
 
 const Announcements: React.FC = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const { isLoggedIn } = useAuth();
   const [newTitle, setNewTitle] = useState('');
   const [newSubtext, setNewSubtext] = useState('');
   const [newLink, setNewLink] = useState('');
@@ -26,8 +25,6 @@ const Announcements: React.FC = () => {
   const [editDateTime, setEditDateTime] = useState('');
 
   useEffect(() => {
-    // Check for token to determine admin status
-    setIsAdmin(!!localStorage.getItem('token'));
     // Fetch latest announcements on mount
     loadAnnouncements();
   }, []);
@@ -128,7 +125,7 @@ const Announcements: React.FC = () => {
     <div className="space-y-6 md:space-y-8 p-2 md:p-4">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <h2 className="font-heading text-2xl text-white">Announcements</h2>
-        {isAdmin && !showForm && (
+        {isLoggedIn && !showForm && (
           <button 
             onClick={() => setShowForm(true)} 
             className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg w-full sm:w-auto"
@@ -138,7 +135,7 @@ const Announcements: React.FC = () => {
         )}
       </div>
       
-      {isAdmin && showForm && (
+      {isLoggedIn && showForm && (
         <form onSubmit={handleCreate} className="bg-accent-50 rounded p-3 md:p-4 mb-6 md:mb-8">
           <h3 className="font-heading text-xl mb-3 md:mb-4 text-white">New Announcement</h3>
           <div className="space-y-3 md:space-y-4">
@@ -280,7 +277,7 @@ const Announcements: React.FC = () => {
                   </div>
                 )}
                 <p className="text-sm text-accent-600">{formatDate(announcement.published_at)}</p>
-                {isAdmin && (
+                {isLoggedIn && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     <button 
                       onClick={() => startEditing(announcement)} 

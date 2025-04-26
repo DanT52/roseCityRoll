@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { getThanks, updateThanks } from '../services/thanks';
+import { useAuth } from '../contexts/AuthContext';
 
 const Thanks: React.FC = () => {
   const [thanksContent, setThanksContent] = useState<string>('# Loading...');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editContent, setEditContent] = useState<string>('');
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  const { isLoggedIn } = useAuth();
+  
   useEffect(() => {
-    setIsAdmin(!!localStorage.getItem('token'));
     loadThanksContent();
   }, []);
 
@@ -50,7 +50,7 @@ const Thanks: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-8">
-      {isAdmin && !isEditing && (
+      {isLoggedIn && !isEditing && (
         <div className="mb-4">
           <button 
             onClick={handleEdit}
@@ -121,7 +121,7 @@ const Thanks: React.FC = () => {
         )
       )}
       
-      {/* Hosted by section - moved to bottom */}
+      {/* Hosted by section */}
       <div className="mt-16 text-center">
         <p className="text-text-200 text-lg mb-4">Hosted by</p>
         <div className="flex justify-center gap-6">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Plus, Edit, Trash, X } from 'lucide-react';
 import { DaySchedule } from '../types';
 import { getAllRoutes, createRoute, updateRoute, deleteRoute } from '../services/routes';
-import { useAuth } from '../contexts/AuthContext'; // Fixed import path
+import { useAuth } from '../contexts/AuthContext';
 
 const Schedule: React.FC = () => {
   const [scheduleData, setScheduleData] = useState<DaySchedule[]>([]);
@@ -18,17 +18,6 @@ const Schedule: React.FC = () => {
   
   // Use the existing AuthContext or check for token directly
   const { isLoggedIn } = useAuth();
-  const [isAdmin, setIsAdmin] = useState(false);
-  
-  // Check if user is authorized on component mount
-  useEffect(() => {
-    // Use the context's isLoggedIn property
-    setIsAdmin(isLoggedIn);
-    
-    // Alternative: Check for token directly if you prefer not to use context
-    // const token = localStorage.getItem('token');
-    // setIsAdmin(!!token);
-  }, [isLoggedIn]);
 
   // Fetch schedule data
   useEffect(() => {
@@ -205,7 +194,7 @@ const Schedule: React.FC = () => {
       <div className="flex justify-between items-center mb-8">
         <h1 className="font-heading text-4xl text-text-100">Event Schedule</h1>
         
-        {isAdmin && (
+        {isLoggedIn && (
           <button
             onClick={handleNewRoute}
             className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
@@ -428,7 +417,7 @@ const Schedule: React.FC = () => {
                   )}
                 </button>
                 
-                {isAdmin && (
+                {isLoggedIn && (
                   <div className="flex p-2 bg-background-800">
                     <button
                       onClick={(e) => {

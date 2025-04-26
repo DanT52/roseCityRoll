@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { FAQ } from '../types';
 import { getFaqs, createFaq, updateFaq, deleteFaq } from '../services/faqs';
+import { useAuth } from '../contexts/AuthContext';
 
 const FAQPage: React.FC = () => {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const { isLoggedIn } = useAuth();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
@@ -19,7 +20,6 @@ const FAQPage: React.FC = () => {
   const [editLinkText, setEditLinkText] = useState('');
 
   useEffect(() => {
-    setIsAdmin(!!localStorage.getItem('token'));
     loadFaqs();
   }, []);
 
@@ -109,7 +109,7 @@ const FAQPage: React.FC = () => {
     <div className="max-w-4xl mx-auto">
       <h1 className="font-heading text-4xl mb-8 text-text-100">Frequently Asked Questions</h1>
       
-      {isAdmin && !showCreateForm && (
+      {isLoggedIn && !showCreateForm && (
         <button 
           onClick={() => setShowCreateForm(true)}
           className="mb-4 bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded-lg"
@@ -118,7 +118,7 @@ const FAQPage: React.FC = () => {
         </button>
       )}
       
-      {isAdmin && showCreateForm && (
+      {isLoggedIn && showCreateForm && (
         <form onSubmit={handleCreate} className="mb-8 p-4 bg-background-800 rounded-lg border border-background-300">
           <h3 className="font-heading text-xl mb-4 text-text-100">New FAQ</h3>
           <div className="space-y-4">
@@ -244,7 +244,7 @@ const FAQPage: React.FC = () => {
                         {faq.linktext} →
                       </a>
                     )}
-                    {isAdmin && (
+                    {isLoggedIn && (
                       <div className="flex space-x-2 mt-4">
                         <button 
                           onClick={() => startEditing(faq)}
@@ -267,7 +267,7 @@ const FAQPage: React.FC = () => {
           </div>
         ))}
         {faqs.length === 0 && (
-          <p className="text-white">No FAQs found.</p>
+          <p className="text-black">FAQ's Loading...</p>
         )}
       </div>
     </div>
