@@ -1,6 +1,7 @@
 # Big Rose City Roll 2025
 
-![Big Rose City Roll](https://i.imgur.com/g8jMdLq.png)
+![Big Rose City Roll](https://github.com/user-attachments/assets/bdcfea02-bb0f-4aeb-a2ce-03bf71e9e52a)
+
 
 ## Project Overview
 This project is a web application for the **Big Rose City Roll 2025** event.
@@ -14,7 +15,7 @@ This project is a web application for the **Big Rose City Roll 2025** event.
 - **API:** FastAPI for high-performance, asynchronous API handling.
 - **Authentication:** FastAPI-Users for secure user authentication and management.
 - **Database:** PostgreSQL .
-- **Hosting:** Planning on Deployment with AWS LightSail.
+- **Hosting:** Hosted on AWS lightsail with a Docker based deployment.
 
 ## Features
 - **User Authentication:** Admins can edit the avalible pages, post annoucments, edit FAQ's and routes.
