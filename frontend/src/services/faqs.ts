@@ -64,3 +64,20 @@ export const deleteFaq = async (id: string) => {
   }
   return await res.json();
 };
+
+export const reorderFaqs = async (faqIds: string[]) => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('Not authenticated');
+  const res = await fetch(BACKEND_URL + "/faqs/reorder", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(faqIds)
+  });
+  if (!res.ok) {
+    throw new Error('Failed to reorder FAQs');
+  }
+  return await res.json();
+};

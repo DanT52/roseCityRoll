@@ -29,6 +29,7 @@ export interface FAQ {
   answer: string;
   link?: string;
   linktext?: string;
+  position: number;
 }
 
 export interface Thanks {

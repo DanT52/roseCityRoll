@@ -50,6 +50,7 @@ class FAQ(Base):
     answer = Column(String, nullable=False)
     link = Column(String, nullable=True)
     linktext = Column(String, nullable=True)
+    position = Column(Integer, nullable=False, default=0)
 
 
 class Thanks(Base):

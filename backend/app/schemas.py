@@ -73,6 +73,7 @@ class FAQBase(BaseModel):
     answer: str
     link: Optional[str] = None
     linktext: Optional[str] = None
+    position: int = 0
 
 class FAQCreate(FAQBase):
     pass

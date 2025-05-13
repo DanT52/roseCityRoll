@@ -56,6 +56,27 @@ async def delete_faq(
 
 @router.get("/", response_model=list[FAQInDB])
 async def get_faqs(session: AsyncSession = Depends(get_async_session)):
-    result = await session.execute(select(FAQ))
+    result = await session.execute(select(FAQ).order_by(FAQ.position))
+    faqs = result.scalars().all()
+    return faqs
+
+@router.post("/reorder", response_model=list[FAQInDB])
+async def reorder_faqs(
+    faq_order: list[str],  # List of FAQ IDs in the desired order
+    session: AsyncSession = Depends(get_async_session),
+    user=Depends(current_active_user)
+):
+    # Update positions based on the order of ids
+    for position, faq_id in enumerate(faq_order):
+        result = await session.execute(select(FAQ).where(FAQ.id == faq_id))
+        faq_obj = result.scalar_one_or_none()
+        if faq_obj:
+            faq_obj.position = position
+            session.add(faq_obj)
+    
+    await session.commit()
+    
+    # Return all FAQs in the new order
+    result = await session.execute(select(FAQ).order_by(FAQ.position))
     faqs = result.scalars().all()
     return faqs

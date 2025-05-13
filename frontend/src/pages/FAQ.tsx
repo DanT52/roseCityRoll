@@ -151,6 +151,7 @@ const FAQPage: React.FC = () => {
         cancelEditing={cancelEditing}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
+        setFaqs={setFaqs} // Add this prop
       />
     </div>
   );
