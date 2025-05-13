@@ -1,7 +1,7 @@
 import React from 'react';
 import { DaySchedule } from '../../types';
-import ScheduleCard from './ScheduleCard';
 import useStravaEmbed from '../../hooks/useStravaEmbed';
+import ScheduleDay from './ScheduleDay';
 
 interface ScheduleListProps {
   scheduleData: DaySchedule[];
@@ -31,19 +31,34 @@ const ScheduleList: React.FC<ScheduleListProps> = ({
     return <p className="text-center text-text-300 py-8">No scheduled routes available.</p>;
   }
 
+  // Group scheduleData by date
+  const groupedByDate = scheduleData.reduce<Record<string, DaySchedule[]>>((acc, event) => {
+    if (!acc[event.date]) {
+      acc[event.date] = [];
+    }
+    acc[event.date].push(event);
+    return acc;
+  }, {});
+
+  // Sort dates chronologically
+  const sortedDates = Object.keys(groupedByDate).sort((a, b) => {
+    return new Date(a).getTime() - new Date(b).getTime();
+  });
+
   return (
-    <div className="space-y-4">
-      {scheduleData.map((day) => (
-        <ScheduleCard
-          key={day.id}
-          day={day}
-          isExpanded={expandedDay === day.id}
-          activeTab={activeTab[day.id] || 'details'}
+    <div>
+      {sortedDates.map((date) => (
+        <ScheduleDay
+          key={date}
+          date={date}
+          events={groupedByDate[date]}
+          expandedDay={expandedDay}
+          activeTab={activeTab}
           isLoggedIn={isLoggedIn}
-          onToggle={() => toggleDay(day.id)}
-          onTabChange={(tab) => handleTabChange(day.id, tab)}
-          onEdit={() => onEdit(day)}
-          onDelete={() => onDelete(day.id)}
+          toggleDay={toggleDay}
+          handleTabChange={handleTabChange}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
       ))}
     </div>

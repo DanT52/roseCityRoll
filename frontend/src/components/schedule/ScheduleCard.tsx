@@ -23,13 +23,16 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
   onEdit,
   onDelete
 }) => {
-  // Format date from YYYY-MM-DD to localized date
-  const formatDate = () => {
-    const [year, month, dayNum] = day.date.split('-').map(Number);
-    if (year && month && dayNum) {
-      return new Date(year, month - 1, dayNum).toLocaleDateString();
+  // Helper function to format distance (e.g. "23 miles" -> "23mi")
+  const formatDistance = (distance: string | undefined): string => {
+    if (!distance) return '';
+    
+    // Extract numbers and convert "miles" to "mi"
+    const match = distance.match(/(\d+(\.\d+)?)\s*(mile|miles|mi)/i);
+    if (match) {
+      return `${match[1]}mi`;
     }
-    return day.date;
+    return distance;
   };
 
   return (
@@ -39,15 +42,32 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
           className="flex-grow flex justify-between items-center p-4 bg-background-800 text-text-100 hover:bg-background-700"
           onClick={onToggle}
         >
-          <div className="flex items-center">
-            <span className="font-heading text-xl">{day.day}</span>
-            <span className="ml-4 text-text-400">{formatDate()}</span>
+            <div className="flex flex-col md:flex-row md:items-center justify-between min-w-0 w-full pr-2 text-left">
+              <div className="flex justify-between items-end md:w-1/2">
+                <span className="font-heading text-xl md:text-2xl break-words">
+                  {day.day}
+                </span>
+                {/* Distance indicator for mobile only */}
+                {day.distance && (
+                  <span className="md:hidden text-base font-medium text-text-300 ml-2 mr-5">
+                    {formatDistance(day.distance)}
+                  </span>
+                )}
+              </div>
+              <div className="mt-1 md:mt-0 flex flex-col md:flex-row md:items-center md:justify-end text-base md:text-xl text-text-200">
+                <span>{day.startTime}</span>
+                <span className="hidden md:inline mx-1">@</span>
+                <span>{day.meetingPoint}</span>
+              </div>
+            </div>
+            
+          <div className="flex items-center space-x-3 ml-2">
+            {isExpanded ? (
+              <ChevronUp className="w-6 h-6 flex-shrink-0" />
+            ) : (
+              <ChevronDown className="w-6 h-6 flex-shrink-0" />
+            )}
           </div>
-          {isExpanded ? (
-            <ChevronUp className="w-6 h-6" />
-          ) : (
-            <ChevronDown className="w-6 h-6" />
-          )}
         </button>
         
         {isLoggedIn && (
@@ -78,6 +98,8 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
       
       {isExpanded && (
         <div className="bg-background-950">
+        
+          
           {/* Tabs for navigation */}
           <div className="flex border-b border-background-700 px-2 pt-2 gap-2">
             <button 
