@@ -44,7 +44,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
         >
             <div className="flex flex-col md:flex-row md:items-center justify-between min-w-0 w-full pr-2 text-left">
               <div className="flex justify-between items-end md:w-1/2">
-                <span className="font-heading text-xl md:text-2xl break-words">
+                <span className="font-heading text-xl  break-words">
                   {day.day}
                 </span>
                 {/* Distance indicator for mobile only */}
@@ -54,7 +54,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
                   </span>
                 )}
               </div>
-              <div className="mt-1 md:mt-0 flex flex-col md:flex-row md:items-center md:justify-end text-base md:text-xl text-text-200">
+              <div className="mt-1 md:mt-0 flex flex-col md:flex-row md:items-center md:justify-end text-base  text-text-200">
                 <span>{day.startTime}</span>
                 <span className="hidden md:inline mx-1">@</span>
                 <span>{day.meetingPoint}</span>
