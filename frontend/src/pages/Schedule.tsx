@@ -206,7 +206,7 @@ const Schedule: React.FC = () => {
       </div>
       <div className="bg-background-800 p-6 rounded-lg mb-8">
         <p className="text-text-200">
-          Routes for each skate are still being worked on. Please check back later for more complete information.
+          Routes are subject to change. Please check back regularly for updates.
         </p>
       </div>
       
