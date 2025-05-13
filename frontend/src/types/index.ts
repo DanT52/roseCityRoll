@@ -16,7 +16,7 @@ export interface DaySchedule {
   startTime: string;
   endTime: string;
   routeDescription: string;
-  difficulty: '🐰 Bunny' | '🟢 Green' | '🔵 Blue' | '⚫ Black';
+  difficulty: '🐰 Bunny' | '🟢 Green' | '🔵 Blue' | '⚫ Black' | 'N/A';
   distance: string;
   leader: string;
   routeMapEmbed?: string;

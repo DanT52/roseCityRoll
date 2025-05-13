@@ -103,7 +103,7 @@ class RouteScheduleBase(BaseModel):
     start_time: str
     end_time: str
     route_description: str
-    difficulty: Literal['🐰 Bunny', '🟢 Green', '🔵 Blue', '⚫ Black']
+    difficulty: Literal['🐰 Bunny', '🟢 Green', '🔵 Blue', '⚫ Black', 'N/A']
     distance: str
     leader: str
     route_map_embed: Optional[str] = None
