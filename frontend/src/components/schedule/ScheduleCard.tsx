@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { ChevronDown, ChevronUp, Edit, Trash } from 'lucide-react';
 import { DaySchedule } from '../../types';
 
@@ -166,7 +167,49 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
                 
                 <div>
                   <h3 className="font-heading text-lg mb-2 text-text-200">Details</h3>
-                  <p className="text-text-300 mb-4">{day.routeDescription}</p>
+                  <ReactMarkdown
+                    components={{
+                      h1: ({children}) => (
+                        <h1 className="font-heading text-xl mb-4 text-text-200">{children}</h1>
+                      ),
+                      h2: ({children}) => (
+                        <h2 className="font-heading text-lg mb-3 text-text-200">{children}</h2>
+                      ),
+                      h3: ({children}) => (
+                        <h3 className="font-heading text-base mb-2 text-text-200">{children}</h3>
+                      ),
+                      p: ({children}) => (
+                        <p className="mb-4 text-text-300">{children}</p>
+                      ),
+                      ul: ({children}) => (
+                        <ul className="list-disc list-inside space-y-1 text-text-300 mb-4">{children}</ul>
+                      ),
+                      ol: ({children}) => (
+                        <ol className="list-decimal list-inside space-y-1 text-text-300 mb-4">{children}</ol>
+                      ),
+                      li: ({children}) => (
+                        <li className="text-text-300">{children}</li>
+                      ),
+                      strong: ({children}) => (
+                        <strong className="font-bold text-text-200">{children}</strong>
+                      ),
+                      em: ({children}) => (
+                        <em className="italic text-text-200">{children}</em>
+                      ),
+                      a: ({children, href}) => (
+                        <a 
+                          href={href} 
+                          className="text-primary-400 hover:text-primary-300 underline transition-colors"
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          {children}
+                        </a>
+                      ),
+                    }}
+                  >
+                    {day.routeDescription}
+                  </ReactMarkdown>
                   
                   <div className="flex items-center space-x-6 mt-4">
                     {day.difficulty !== 'N/A' && (
