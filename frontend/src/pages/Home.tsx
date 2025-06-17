@@ -8,7 +8,7 @@ import Announcements from './Announcements';
 const Home: React.FC = () => {
   const { features } = useFeatures();
   
-  const eventDate = new Date('2025-06-26T18:00:00-07:00'); // 6 PM PDT on June 26th, 2025
+  const eventDate = new Date('2025-06-26T20:00:00-07:00'); // 6 PM PDT on June 26th, 2025
 
   const countdownRenderer = ({ days, hours, minutes, completed }: any) => {
     if (completed) {
