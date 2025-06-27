@@ -222,17 +222,17 @@ const Home: React.FC = () => {
               </h3>
               <div className="bg-background-800 rounded-lg p-4 mb-4">
                 {/* Header with day, date, and distance */}
-                <div className="flex items-start justify-between mb-3 md:flex-col md:items-center md:text-center md:gap-3">
-                  <div className="flex items-center gap-2 md:flex-col md:items-center md:text-center">
-                    <Calendar className="w-4 h-4 md:w-5 md:h-5 text-primary-500 mt-0.5 md:mt-0" />
-                    <div className="md:text-center">
-                      <div className="text-lg md:text-xl font-semibold text-text-100">{nextRide.day}</div>
-                      <div className="text-sm md:text-base text-text-200">{nextRide.date}</div>
+                <div className="flex flex-col items-center text-center gap-3 mb-1 md:mb-3">
+                  <div className="flex items-center gap-3 text-center">
+                    <Calendar className="w-5 h-5 text-primary-500" />
+                    <div className="text-center">
+                      <div className="text-xl font-semibold text-text-100">{nextRide.day}</div>
+                      <div className="text-base text-text-200">{nextRide.date}</div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-1 md:items-center md:flex-row md:gap-3">
+                  <div className="flex flex-row items-center gap-3">
                     {nextRide.difficulty && nextRide.difficulty !== 'N/A' && (
-                      <span className="text-text-100 text-xs md:text-sm font-medium">
+                      <span className="text-text-200 text-sm md:text-base">
                         {nextRide.difficulty}
                       </span>
                     )}
@@ -243,19 +243,19 @@ const Home: React.FC = () => {
                 </div>
 
                 {/* Time and location in a compact row */}
-                <div className="space-y-2 mb-3 md:text-center">
-                  <div className="flex items-center gap-2 md:justify-center">
+                <div className="space-y-2 mb-3 text-center">
+                  <div className="flex items-center gap-2 justify-center">
                     <Clock className="w-4 h-4 md:w-5 md:h-5 text-primary-500" />
                     <span className="text-text-100 text-sm md:text-base">{nextRide.startTime} - {nextRide.endTime}</span>
                   </div>
-                  <div className="flex items-start gap-2 md:justify-center md:items-center">
-                    <MapPin className="w-4 h-4 md:w-5 md:h-5 text-primary-500 mt-0.5 md:mt-0 flex-shrink-0" />
+                  <div className="flex items-center gap-2 justify-center">
+                    <MapPin className="w-4 h-4 md:w-5 md:h-5 text-primary-500 flex-shrink-0" />
                     <span className="text-text-100 text-sm md:text-base leading-tight">{nextRide.meetingPoint}</span>
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-text-100 text-sm md:text-base mb-3 leading-relaxed md:text-center">
+                <p className="text-text-100 text-sm md:text-base mb-3 leading-relaxed text-center">
                     {nextRide.routeDescription.split(/(?<=[.!?])\s/)[0]}
                 </p>
                 
