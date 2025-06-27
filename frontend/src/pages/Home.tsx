@@ -20,34 +20,121 @@ const Home: React.FC = () => {
         const routes = await getAllRoutes();
         const now = new Date();
         
+        console.log('Fetched routes:', routes); // Debug log
+        console.log('Current time:', now); // Debug log
+        
+        // Helper function to safely parse date and time
+        const parseDateTime = (dateStr: string, timeStr: string) => {
+          try {
+            // Try different date formats that work better with Safari
+            let date;
+            
+            // If date is in YYYY-MM-DD format, use it directly
+            if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+              date = new Date(`${dateStr}T${convertTo24Hour(timeStr)}`);
+            } else {
+              // Fallback to original method
+              date = new Date(`${dateStr} ${timeStr}`);
+            }
+            
+            // Check if date is valid
+            if (isNaN(date.getTime())) {
+              console.warn('Invalid date parsed:', dateStr, timeStr);
+              return null;
+            }
+            
+            return date;
+          } catch (error) {
+            console.error('Error parsing date:', error, dateStr, timeStr);
+            return null;
+          }
+        };
+        
+        // Helper function to convert 12-hour time to 24-hour format
+        const convertTo24Hour = (timeStr: string) => {
+          try {
+            const time = timeStr.trim();
+            const [timePart, period] = time.split(/\s+(AM|PM|am|pm)/i);
+            
+            if (!period) {
+              // Already in 24-hour format or no AM/PM
+              return time.includes(':') ? `${time}:00` : time;
+            }
+            
+            let [hoursStr, minutes] = timePart.split(':');
+            let hours = parseInt(hoursStr, 10);
+            minutes = minutes || '00';
+            
+            if (period.toUpperCase() === 'PM' && hours !== 12) {
+              hours += 12;
+            } else if (period.toUpperCase() === 'AM' && hours === 12) {
+              hours = 0;
+            }
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+          } catch (error) {
+            console.error('Error converting time:', error, timeStr);
+            return timeStr;
+          }
+        };
+        
         // First check if there's a currently happening event
         const currentEvent = routes.find(route => {
           try {
-            const startDateTime = new Date(`${route.date} ${route.startTime}`);
-            const endDateTime = new Date(`${route.date} ${route.endTime}`);
-            return now >= startDateTime && now <= endDateTime;
-          } catch {
+            const startDateTime = parseDateTime(route.date, route.startTime);
+            const endDateTime = parseDateTime(route.date, route.endTime);
+            
+            if (!startDateTime || !endDateTime) return false;
+            
+            const isCurrentEvent = now >= startDateTime && now <= endDateTime;
+            console.log('Checking current event:', route.day, {
+              start: startDateTime,
+              end: endDateTime,
+              now,
+              isCurrent: isCurrentEvent
+            });
+            
+            return isCurrentEvent;
+          } catch (error) {
+            console.error('Error checking current event:', error, route);
             return false;
           }
         });
         
         if (currentEvent) {
+          console.log('Found current event:', currentEvent);
           setNextRide(currentEvent);
           return;
         }
         
         // Find the next upcoming ride
         const upcomingRides = routes.filter(route => {
-          const rideDateTime = new Date(`${route.date} ${route.startTime}`);
-          return rideDateTime > now;
+          const rideDateTime = parseDateTime(route.date, route.startTime);
+          if (!rideDateTime) return false;
+          
+          const isUpcoming = rideDateTime > now;
+          console.log('Checking upcoming event:', route.day, {
+            dateTime: rideDateTime,
+            now,
+            isUpcoming
+          });
+          
+          return isUpcoming;
         }).sort((a, b) => {
-          const dateTimeA = new Date(`${a.date} ${a.startTime}`);
-          const dateTimeB = new Date(`${b.date} ${b.startTime}`);
+          const dateTimeA = parseDateTime(a.date, a.startTime);
+          const dateTimeB = parseDateTime(b.date, b.startTime);
+          
+          if (!dateTimeA || !dateTimeB) return 0;
+          
           return dateTimeA.getTime() - dateTimeB.getTime();
         });
         
+        console.log('Upcoming rides found:', upcomingRides);
+        
         if (upcomingRides.length > 0) {
           setNextRide(upcomingRides[0]);
+        } else {
+          console.log('No upcoming rides found');
         }
       } catch (error) {
         console.error('Failed to fetch next ride:', error);
@@ -76,12 +163,54 @@ const Home: React.FC = () => {
               <h3 className="text-xl font-heading text-text-100 mb-2 mt-2">
                 {(() => {
                   const now = new Date();
-                  const startDateTime = new Date(`${nextRide.date} ${nextRide.startTime}`);
-                  let endDateTime;
+                  
+                  // Use the same date parsing logic as in useEffect
+                  const parseDateTime = (dateStr: string, timeStr: string) => {
+                    try {
+                      const convertTo24Hour = (timeStr: string) => {
+                        try {
+                          const time = timeStr.trim();
+                          const [timePart, period] = time.split(/\s+(AM|PM|am|pm)/i);
+                          
+                          if (!period) {
+                            return time.includes(':') ? `${time}:00` : time;
+                          }
+                          
+                          let [hoursStr, minutes] = timePart.split(':');
+                          let hours = parseInt(hoursStr, 10);
+                          minutes = minutes || '00';
+                          
+                          if (period.toUpperCase() === 'PM' && hours !== 12) {
+                            hours += 12;
+                          } else if (period.toUpperCase() === 'AM' && hours === 12) {
+                            hours = 0;
+                          }
+                          
+                          return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+                        } catch {
+                          return timeStr;
+                        }
+                      };
+                      
+                      let date;
+                      if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        date = new Date(`${dateStr}T${convertTo24Hour(timeStr)}`);
+                      } else {
+                        date = new Date(`${dateStr} ${timeStr}`);
+                      }
+                      
+                      return isNaN(date.getTime()) ? null : date;
+                    } catch {
+                      return null;
+                    }
+                  };
+                  
+                  const startDateTime = parseDateTime(nextRide.date, nextRide.startTime);
+                  let endDateTime = null;
                   
                   try {
-                    endDateTime = new Date(`${nextRide.date} ${nextRide.endTime}`);
-                    if (now >= startDateTime && now <= endDateTime) {
+                    endDateTime = parseDateTime(nextRide.date, nextRide.endTime);
+                    if (startDateTime && endDateTime && now >= startDateTime && now <= endDateTime) {
                       return "Current Event";
                     }
                   } catch {
@@ -135,13 +264,55 @@ const Home: React.FC = () => {
                   <div className="text-center">
                     {(() => {
                       const now = new Date();
-                      const startDateTime = new Date(`${nextRide.date} ${nextRide.startTime}`);
-                      let endDateTime;
+                      
+                      // Use the same robust date parsing
+                      const parseDateTime = (dateStr: string, timeStr: string) => {
+                        try {
+                          const convertTo24Hour = (timeStr: string) => {
+                            try {
+                              const time = timeStr.trim();
+                              const [timePart, period] = time.split(/\s+(AM|PM|am|pm)/i);
+                              
+                              if (!period) {
+                                return time.includes(':') ? `${time}:00` : time;
+                              }
+                              
+                              let [hoursStr, minutes] = timePart.split(':');
+                              let hours = parseInt(hoursStr, 10);
+                              minutes = minutes || '00';
+                              
+                              if (period.toUpperCase() === 'PM' && hours !== 12) {
+                                hours += 12;
+                              } else if (period.toUpperCase() === 'AM' && hours === 12) {
+                                hours = 0;
+                              }
+                              
+                              return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+                            } catch {
+                              return timeStr;
+                            }
+                          };
+                          
+                          let date;
+                          if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                            date = new Date(`${dateStr}T${convertTo24Hour(timeStr)}`);
+                          } else {
+                            date = new Date(`${dateStr} ${timeStr}`);
+                          }
+                          
+                          return isNaN(date.getTime()) ? null : date;
+                        } catch {
+                          return null;
+                        }
+                      };
+                      
+                      const startDateTime = parseDateTime(nextRide.date, nextRide.startTime);
+                      let endDateTime = null;
                       
                       try {
-                        endDateTime = new Date(`${nextRide.date} ${nextRide.endTime}`);
+                        endDateTime = parseDateTime(nextRide.date, nextRide.endTime);
                         // Check if current time is between start and end
-                        if (now >= startDateTime && now <= endDateTime) {
+                        if (startDateTime && endDateTime && now >= startDateTime && now <= endDateTime) {
                           return (
                             <div>
                               <div className="text-xs md:text-sm text-text-200 mb-1">Status</div>
@@ -158,9 +329,9 @@ const Home: React.FC = () => {
                         <>
                           <div className="text-xs md:text-sm text-text-200 mb-2">Starts in</div>
                           <Countdown 
-                            date={startDateTime} 
+                            date={startDateTime || new Date()} 
                             renderer={({ hours, minutes, completed }) => {
-                              if (completed) {
+                              if (completed || !startDateTime) {
                                 return <span className="text-primary-500 text-sm md:text-base">The event has started!</span>;
                               }
                               return (
