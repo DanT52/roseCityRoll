@@ -367,9 +367,7 @@ const Home: React.FC = () => {
             <div className="mb-8 text-center max-w-xl mx-auto">
               <div className="bg-background-800 rounded-lg p-8 mb-4">
                 <h3 className="text-xl font-heading text-text-100 mb-4">Thanks for Coming!</h3>
-                <p className="text-lg text-text-200 mb-4">
-                  Hope to see you again next time!
-                </p>
+                
               </div>
               <Link
                 to="/schedule"
