@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import RoseCityRollBanner from '../assets/images/roseCityRoll.png';
 import { useFeatures } from '../contexts/FeatureContext';
-import { EventCountdown, CallToActionButtons, EventOverview } from '../components/home';
+import { EventCountdown, CallToActionButtons, FollowButton, EventOverview } from '../components/home';
 import Announcements from './Announcements';
 
 const Home: React.FC = () => {
   const { features } = useFeatures();
+  const [isEventOver, setIsEventOver] = useState(false);
   
   // Event start time configuration
   const EVENT_START_TIME = new Date('2025-06-26T18:00:00-07:00'); // 6 PM PDT on June 26th, 2025
+
+  const handleEventStatusChange = (eventOver: boolean) => {
+    setIsEventOver(eventOver);
+  };
 
   return (
     <div className="space-y-12">
@@ -18,15 +23,21 @@ const Home: React.FC = () => {
           <img src={RoseCityRollBanner} alt="Big Rose City Roll Banner" className="w-full max-w-xl mx-auto mb-0" />
           
           {/* Event Countdown Section */}
-          <EventCountdown eventStartTime={EVENT_START_TIME} />
+          <EventCountdown 
+            eventStartTime={EVENT_START_TIME} 
+            onEventStatusChange={handleEventStatusChange}
+          />
           
           <p className="text-xl mb-4 max-w-2xl mx-auto">
             Join Portland&apos;s first Big Rose City Roll from June 26th to June 29th 2025 for a week of skating,
             community building, and unforgettable experiences.
           </p>
           
-          {/* Call to Action Buttons */}
-          <CallToActionButtons />
+          {/* Call to Action Buttons - only show when event is not over */}
+          {!isEventOver && <CallToActionButtons />}
+          
+          {/* Follow Button - always show */}
+          <FollowButton />
         </div>
       </section>
 

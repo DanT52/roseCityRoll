@@ -7,9 +7,10 @@ import ThankYouMessage from './ThankYouMessage';
 
 interface EventCountdownProps {
   eventStartTime: Date;
+  onEventStatusChange?: (isEventOver: boolean) => void;
 }
 
-const EventCountdown: React.FC<EventCountdownProps> = ({ eventStartTime }) => {
+const EventCountdown: React.FC<EventCountdownProps> = ({ eventStartTime, onEventStatusChange }) => {
   const [nextRide, setNextRide] = useState<DaySchedule | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -154,6 +155,14 @@ const EventCountdown: React.FC<EventCountdownProps> = ({ eventStartTime }) => {
     
     fetchNextRide();
   }, []);
+
+  // Call the callback when the event status changes
+  React.useEffect(() => {
+    if (!loading && onEventStatusChange) {
+      const isEventOver = !nextRide && eventStartTime <= new Date();
+      onEventStatusChange(isEventOver);
+    }
+  }, [loading, nextRide, eventStartTime, onEventStatusChange]);
 
   if (loading) {
     return (

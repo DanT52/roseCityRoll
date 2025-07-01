@@ -1,9 +1,9 @@
 import React from 'react';
-import { ArrowRight, Instagram } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const CallToActionButtons: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 mb-10">
+    <div className="flex flex-col items-center justify-center gap-4 mb-4">
       <div className="relative group">
         <a
           href="https://docs.google.com/forms/d/e/1FAIpQLSfRImAGRhCiu-2dNP7SCB1dt8_x5-4zDMHYqWQMHYBwFkYzIg/viewform"
@@ -32,14 +32,6 @@ const CallToActionButtons: React.FC = () => {
           <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
         </div>
       </div>
-      <a
-        href="https://www.instagram.com/bigrosecityroll/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center bg-accent-500 hover:bg-accent-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-base"
-      >
-        <Instagram className="w-5 h-5 mr-2" /> Follow for Updates
-      </a>
     </div>
   );
 };
