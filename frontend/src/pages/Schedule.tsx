@@ -173,7 +173,7 @@ const Schedule: React.FC = () => {
       </div>
       <div className="bg-background-800 p-6 rounded-lg mb-8">
         <p className="text-text-200">
-          Routes are subject to change. Please check back regularly for updates.
+          This schedule is from Big Rose City Roll 2025. Stay tuned for future updates.
         </p>
       </div>
       
