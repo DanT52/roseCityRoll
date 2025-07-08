@@ -13,24 +13,15 @@ const FAQPage: React.FC = () => {
     {
       id: '1',
       question: "What is Big Rose City Roll?",
-      answer: "Big Rose City Roll is Portland's first multi-day skating event bringing together inline and quad skaters for group rides, community building, and unforgettable experiences."
+      answer: "Big Rose City Roll was Portland's first multi-day skating event that brought together inline and quad skaters for group rides, community building, and unforgettable experiences. The inaugural event took place in June 2025."
     },
     {
       id: '2',
-      question: "When is the event?",
-      answer: "The event takes place from June 26th to June 29th, 2025. Our first group ride will be Thursday evening, and the last ride will be Sunday morning."
+      question: "When is the next event?",
+      answer: "The first Big Rose City Roll took place June 26th-29th, 2025. We're planning to make this an annual event and will be back in June 2026! Follow us on Instagram for updates about dates and registration."
     },
     {
       id: '3',
-      question: "What lodging options are available?",
-      answer: "North West Portland Hostel will be where this event is hosted. We're grateful to have the support of this beautiful place and its owners for our first Big Rose City Roll 🌹. You can already start reserving your rooms on their website with the promo code BigRoseCityRoll2025.",
-      link: {
-        text: "Book your room here",
-        url: "https://hotels.cloudbeds.com/en/reservation/IyNleY/?currency=usd&checkin=2025-06-26&checkout=2025-06-29&promo=BigRoseCityRoll2025"
-      }
-    },
-    {
-      id: '4',
       question: "What are the difficulty ratings?",
       answer: "We use a difficulty system:\n\n" +
         "🟢 Green: 6-7 mph, rougher surfaces, some hills\n" +
@@ -38,9 +29,9 @@ const FAQPage: React.FC = () => {
         "⚫ Black: 10-12+ mph, challenging terrain, steep hills"
     },
     {
-      id: '5',
-      question: "Do I need to be an experienced skater?",
-      answer: "We welcome skaters of all skill levels! Each day's routes will be marked with difficulty levels so you can choose what's best for you. We recommend being comfortable with basic skating and stopping techniques."
+      id: '4',
+      question: "How experienced of a skater do I need to be?",
+      answer: "Each day's routes will be marked with difficulty ratings so you can choose what's best for you based on your personal fitness and skill level. Portland is geographically a hilly city so speed control and stopping techniques are needed to be safe. We will occasionally be skating amongst traffic so urban awareness is essential. We'll try to maintain an average pace of 7-8 mph. There will be regroup points and longer breaks every hour or so. Each ride usually follows the following pattern: A mellow uphill for 3-5 miles inland from sea level. Flatter streets for most of the skate, and a descent back to sea level.\n\nYou can also checkout the exact routes we will be skating by checking out the \"Route Map\" tab within each event on the Schedule page. This will give you a better idea of the elevation profiles, terrain, and hazards."
     }
   ];
 
