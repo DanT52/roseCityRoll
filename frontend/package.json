@@ -2,7 +2,7 @@
   "name": "big-rose-city-roll",
   "private": true,
   "version": "1.0.0",
-  "homepage": "http://bigrosecityroll.com/",
+  "homepage": "https://dant52.github.io/roseCityRoll/",
   "type": "module",
   "scripts": {
     "dev": "vite",
