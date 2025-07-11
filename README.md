@@ -11,6 +11,17 @@ This project is a web application for the **Big Rose City Roll 2025** event.
 - **Styling:** Tailwind CSS for a utility-first, responsive design.
 - **State Management:** Context API for managing global state.
 
+### Development Container
+
+The `.devcontainer` directory contains a configuration file for setting up a development container. This is designed to work with the VS Code Dev Containers extension, enabling a seamless development environment. 
+
+The container includes:
+- **Node.js** with TypeScript for frontend development.
+- **PostgreSQL** for database management.
+- **Python** for backend development.
+
+This setup ensures all necessary tools are pre-installed for efficient development.
+
 ### Backend
 - **API:** FastAPI for high-performance, asynchronous API handling.
 - **Authentication:** FastAPI-Users for secure user authentication and management.
