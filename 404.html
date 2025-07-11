@@ -1,27 +1,11 @@
+<!-- public/404.html -->
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <title>Redirecting...</title>
-    <script type="text/javascript">
-      // This ensures GitHub Pages returns index.html but the path remains intact for BrowserRouter
-      (function () {
-        var path = window.location.pathname
-        var search = window.location.search
-        var hash = window.location.hash
-
-        // Combine and redirect
-        var target = '/' + path.replace(/^\/+/, '') + search + hash
-
-        // Prevent infinite loop on bad paths like "/404.html"
-        if (path !== '/404.html') {
-          sessionStorage.redirectedFrom404 = 'true'
-          window.location.replace(target)
-        }
-      })()
-    </script>
+    <title>Page Not Found</title>
   </head>
   <body>
-    <p>Redirecting...</p>
+    <h1>404 - Page Not Found</h1>
+    <p>If you were expecting content here, try going back to the <a href="/">home page</a>.</p>
   </body>
 </html>
