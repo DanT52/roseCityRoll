@@ -1,12 +1,24 @@
-<!-- public/404.html -->
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="refresh" content="0; URL=/" />
-    <script>
-      // JavaScript fallback for redirecting with full path
-      const redirectTo = '/' + location.pathname.slice(1) + location.search + location.hash;
-      location.replace(redirectTo);
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+      // This ensures GitHub Pages returns index.html but the path remains intact for BrowserRouter
+      (function () {
+        var path = window.location.pathname
+        var search = window.location.search
+        var hash = window.location.hash
+
+        // Combine and redirect
+        var target = '/' + path.replace(/^\/+/, '') + search + hash
+
+        // Prevent infinite loop on bad paths like "/404.html"
+        if (path !== '/404.html') {
+          sessionStorage.redirectedFrom404 = 'true'
+          window.location.replace(target)
+        }
+      })()
     </script>
   </head>
   <body>
