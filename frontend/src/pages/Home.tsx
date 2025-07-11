@@ -92,9 +92,7 @@ const Home: React.FC = () => {
             Whether you're a seasoned skater or just getting started, our inclusive community
             welcomes you to join us for this unforgettable skating experience.
           </p>
-          <p className="mt-4">
-            More info is coming soon!
-          </p>
+          
           <div className="mt-8 text-center">
             <p className="text-text-200 mb-4">Hosted by</p>
             <div className="flex justify-center gap-4">
