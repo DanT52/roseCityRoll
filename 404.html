@@ -1,0 +1,15 @@
+<!-- public/404.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0; URL=/" />
+    <script>
+      // JavaScript fallback for redirecting with full path
+      const redirectTo = '/' + location.pathname.slice(1) + location.search + location.hash;
+      location.replace(redirectTo);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>
